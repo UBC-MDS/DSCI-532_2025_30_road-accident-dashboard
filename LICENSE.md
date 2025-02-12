@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2025, Tien Nguyen, Eugene You, Gilbert Akuja, Shawn Xiao Hu
+Copyright (c) 2025, Tien Nguyen, Michael Suriawan, Franklin Aryee
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
