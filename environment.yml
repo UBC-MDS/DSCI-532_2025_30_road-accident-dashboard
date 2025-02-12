@@ -1,0 +1,15 @@
+name: '532-viz-project'
+channels:
+    - conda-forge
+    - defaults
+dependencies:
+    - ipykernel
+    - altair-all
+    - dash
+    - dash-bootstrap-components
+    - plotly
+    - tabulate
+    - lxml
+    - pip
+    - pip:
+        - dash-vega-components
