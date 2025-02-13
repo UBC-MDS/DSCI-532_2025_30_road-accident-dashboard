@@ -12,6 +12,8 @@ Road accidents are a major public safety concern, leading to significant loss of
 
 TO BE FILLED BY FRANKLIN
 
+MENTION THAT THE DATA IS COMING FROM [link](https://www.kaggle.com/datasets/ankushpanday1/global-road-accidents-dataset)
+
 ## Research questions and usage scenarios
 
 TO BE FILLED BY TIEN

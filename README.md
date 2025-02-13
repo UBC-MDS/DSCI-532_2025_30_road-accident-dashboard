@@ -8,6 +8,10 @@ Road accidents are a major public safety concern, leading to significant loss of
 
 We are data analysts specializing in transportation safety. Our goal is to help the Canadian government transportation agencies and urban planners leverage data to make informed decisions that enhance road safety.  
 
+## Dataset Attribution
+
+This project uses data from the [Global Road Accidents Dataset](https://www.kaggle.com/datasets/ankushpanday1/global-road-accidents-dataset) available on Kaggle.  
+
 ## Usage  
 
 - Use the **region selector** to explore accident trends across different locations.  
