@@ -38,9 +38,9 @@ If you are proposing a feature:
 * Remember that this is a volunteer-driven project, and that contributions
   are welcome :)
 
-## Get Started!
+## Get Started
 
-Ready to contribute? Here's how to set up `fast_eda` for local development.
+Ready to contribute? Here's how to set up the dashboard for your local development.
 
 1. Fork the project on GitHub
 2. Create a branch on your fork
