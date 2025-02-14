@@ -10,9 +10,42 @@ Road accidents are a major public safety concern, leading to significant loss of
 
 ## Description of the data
 
-TO BE FILLED BY FRANKLIN
+The original dataset used in this study is the [Global Road Accidents Dataset](https://www.kaggle.com/datasets/ankushpanday1/global-road-accidents-dataset), which provides a comprehensive collection of road accident records from various countries. It contains approximately 132,000 rows and 30 features, capturing a range of accident-related factors including accident severity, environmental conditions, vehicle involvement, and driver characteristics.
 
-MENTION THAT THE DATA IS COMING FROM [link](https://www.kaggle.com/datasets/ankushpanday1/global-road-accidents-dataset)
+This dataset enables exploratory data analysis (EDA), feature engineering, and predictive modeling to assess accident trends and severity levels. The variables included in the dataset are as follows:
+
+1. **Country** *(string)* – The country where the accident occurred.
+2. **Year** *(integer)* – The year in which the accident took place.
+3. **Month** *(string)* – The month of the accident.
+4. **Day of Week** *(string)* – The day of the week when the accident happened.
+5. **Time of Day** *(string)* – The time period (morning, afternoon, evening, night) when the accident occurred.
+6. **Urban/Rural** *(string)* – Whether the accident took place in an urban or rural area.
+7. **Road Type** *(string)* – The classification of the road where the accident happened (e.g., highway, street).
+8. **Weather Conditions** *(string)* – The weather at the time of the accident (e.g., clear, rainy, snowy, windy).
+9. **Visibility Level** *(float)* – The level of visibility at the accident scene (measured or categorized level).
+10. **Number of Vehicles Involved** *(integer)* – The total number of vehicles involved in the accident.
+11. **Speed Limit** *(integer)* – The speed limit of the road where the accident occurred.
+12. **Driver Age Group** *(string)* – The age category of the driver(s) involved.
+13. **Driver Gender** *(string)* – The gender of the driver(s) involved.
+14. **Driver Alcohol Level** *(float)* – The recorded alcohol level of the driver(s).
+15. **Driver Fatigue** *(integer: 0 or 1)* – Indicator of whether driver fatigue was a contributing factor.
+16. **Vehicle Condition** *(string)* – The condition of the vehicle(s) involved (e.g., poor, good).
+17. **Pedestrians Involved** *(integer)* – The number of pedestrians involved in the accident.
+18. **Cyclists Involved** *(integer)* – The number of cyclists involved in the accident.
+19. **Accident Severity** *(string)* – The severity of the accident (e.g., minor, moderate, severe).
+20. **Number of Injuries** *(integer)* – The number of injuries recorded in the accident.
+21. **Number of Fatalities** *(integer)* – The number of fatalities resulting from the accident.
+22. **Emergency Response Time** *(float)* – The response time of emergency services in minutes.
+23. **Traffic Volume** *(float)* – The level of traffic at the time of the accident.
+24. **Road Condition** *(string)* – The condition of the road surface (e.g., dry, wet, icy).
+25. **Accident Cause** *(string)* – The identified cause of the accident (e.g., weather, human error).
+26. **Insurance Claims** *(integer)* – The number of insurance claims filed as a result of the accident.
+27. **Medical Cost** *(float)* – The estimated medical expenses related to the accident.
+28. **Economic Loss** *(float)* – The total economic loss attributed to the accident, including damage costs.
+29. **Region** *(string)* – The geographical region where the accident took place.
+30. **Population Density** *(float)* – The population density of the region where the accident occurred.
+
+This dataset provides a robust foundation for analyzing accident trends and understanding the impact of environmental and human factors on road safety. For this project, we will focus on filtering the data for Canada, which would reduced the number of observations to 13,349 rows.
 
 ## Research Questions
 
