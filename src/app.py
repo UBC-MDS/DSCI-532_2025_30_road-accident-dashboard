@@ -64,7 +64,7 @@ app.layout = dbc.Container(
         dbc.Row(
             [
                 dbc.Col(
-                    dcc.Graph(id="accident-graph", style={"height": "800px"}),
+                    dcc.Graph(id="accident-graph", style={"height": "1000px"}),
                     width=12
                 )
             ]
@@ -97,7 +97,7 @@ def update_graph(selected_urban_rural, selected_time):
             "count": "Number of Accidents",
         },
         color="Accident Severity",
-        height=800,
+        height=1000,
     )
     return fig
 

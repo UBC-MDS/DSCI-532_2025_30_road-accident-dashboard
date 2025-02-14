@@ -10,9 +10,24 @@ Road accidents are a major public safety concern, leading to significant loss of
 
 ## Description of the data
 
-TO BE FILLED BY FRANKLIN
+The original dataset used in this study is the [Global Road Accidents Dataset](https://www.kaggle.com/datasets/ankushpanday1/global-road-accidents-dataset). The dataset contains approximately 132,000 recorded road accidents from various countries. Each accident is characterized by 30 variables that describe factors potentially influencing accident severity and outcomes. These variables fall into the following key categories:
 
-MENTION THAT THE DATA IS COMING FROM [link](https://www.kaggle.com/datasets/ankushpanday1/global-road-accidents-dataset)
+- **Geographic and temporal attributes**: These include the country, year, month, day of the week, time of day, and whether the accident occurred in an urban or rural area.
+- **Environmental conditions**: Weather conditions, visibility level, and road condition provide insight into how external factors contribute to accidents.
+- **Accident details**: Information on the road type, number of vehicles involved, speed limit, and accident cause helps in identifying patterns and risk factors.
+- **Driver and vehicle characteristics**: Variables such as driver age group, gender, alcohol level, fatigue, and vehicle condition allow us to assess human and mechanical contributions to accidents.
+- **Accident severity and outcomes**: This includes accident severity (minor, moderate, severe), number of injuries, number of fatalities, and emergency response time.
+- **Economic impact**: Variables such as insurance claims, medical cost, and economic loss help estimate the financial burden of road accidents.
+- **Additional contextual information**: Region, traffic volume, and population density contribute to understanding how location-based factors influence accident trends.
+
+Using this data, we will also derive new variables, such as:
+
+- **Season**: Based on the month of the accident, we will categorize accidents into winter, spring, summer, or fall to analyze seasonal trends in accident severity.
+- **Economic Cost Per Capita**: By dividing the total economic loss by the population density in the affected region, we can estimate the financial impact of accidents on a per-capita basis.
+
+For this project, we will focus on filtering the data for Canada, which will reduce the number of observations to 13,349 rows.
+
+By leveraging these features, we aim to explore accident trends, identify high-risk conditions, and support policymakers in making data-driven decisions to improve road safety in Canada.
 
 ## Research Questions
 
