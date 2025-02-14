@@ -97,7 +97,7 @@ def update_graph(selected_urban_rural, selected_time):
             "count": "Number of Accidents",
         },
         color="Accident Severity",
-        height=1000,
+        height=800,
     )
     return fig
 
