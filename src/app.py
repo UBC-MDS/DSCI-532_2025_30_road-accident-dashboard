@@ -64,7 +64,7 @@ app.layout = dbc.Container(
         dbc.Row(
             [
                 dbc.Col(
-                    dcc.Graph(id="accident-graph", style={"height": "1000px"}),
+                    dcc.Graph(id="accident-graph", style={"height": "800px"}),
                     width=12
                 )
             ]
