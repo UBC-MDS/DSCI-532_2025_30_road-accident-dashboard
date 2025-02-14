@@ -10,6 +10,8 @@ dependencies:
     - plotly
     - tabulate
     - lxml
+    - pandas
+    - numpy
     - pip
     - pip:
         - dash-vega-components
