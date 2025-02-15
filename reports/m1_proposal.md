@@ -65,6 +65,54 @@ This policy brief is shared with authorities, who begin discussions on implement
 
 ## App sketch & brief description
 
-![app sketch](../img/sketch.png)
+![app sketch](../img/app-sketch.png)
 
-TO BE FILLED BY TIEN
+### Dashboard Overview
+
+The Road Accident Analytics Dashboard provides an interactive interface to explore trends in road accidents across Canada. The dashboard allows users to filter accident data by key factors such as settlement type (urban/rural), season, weather conditions, road conditions, time of day, and year range. The visualizations are designed to provide insights into accident severity, emergency response time, and economic impact.
+
+### Key Metrics Display
+
+At the top of the dashboard, four key statistics provide a quick overview of accident data:
+
+- Total Accidents: Displays the total number of recorded accidents in the selected dataset.
+- Total Fatalities: Shows the number of fatalities resulting from these accidents.
+- Average Emergency Response Time: Indicates the average time emergency services took to respond.
+- Economic Cost per Capita: Estimates the financial burden of accidents per person in the affected region.
+
+### Interactive Filters
+
+Users can dynamically filter the data using the following controls:
+
+- Settlement Type (Dropdown): Toggle between Urban and Rural accidents.
+- Season (Dropdown): Filter accidents by season (Winter, Summer, etc.).
+- Weather Condition (Dropdown): Select specific weather conditions like Clear, Snowy, Foggy, etc..
+- Road Condition (Dropdown): Choose road conditions such as Wet, Icy, or Dry.
+- Time of Day (Dropdown): Filter accidents occurring in Morning, Afternoon, Evening, or Night.
+- Year Range Slider: Adjust the time window for analysis (2001 - 2022).
+- Calendar View: Provides an alternative way to select specific dates.
+
+### Visualizations
+
+1. Emergency Response Time vs. Accident Severity (Boxplot)
+
+  This boxplot compares emergency response times across different accident severities (minor, moderate, and severe). The visualization highlights whether severe accidents tend to have longer response times than minor ones.
+
+2. Weather Conditions and Accident Severity (Stacked Bar Chart)
+
+  This chart categorizes accidents based on weather conditions (windy, snowy, rainy, foggy, clear), with bars color-coded to indicate minor, moderate, and severe accidents. It helps analyze which weather conditions are linked to more severe accidents.
+
+3. Age Group and Accident Severity (Stacked Horizontal Bar Chart)
+
+    This chart shows the distribution of accident severity for different driver age groups (e.g., 18-25, 26-40, 41-60, etc.). The color-coded bars allow users to observe whether younger or older drivers are more likely to be involved in severe accidents.
+
+4. Accident Trends Over Time (Line Chart)
+
+    This line chart illustrates how the number of minor, moderate, and severe accidents has changed over time (2001-2024). It allows users to detect trends, such as increasing accident severity in recent years.
+
+### Interactivity Features
+
+Users can hover over charts to see detailed tooltips with exact data values.
+Filters dynamically update all charts, allowing users to explore specific conditions.
+
+This dashboard provides an intuitive and insightful way to analyze road accidents, helping policymakers and researchers identify risk factors and potential safety improvements.
