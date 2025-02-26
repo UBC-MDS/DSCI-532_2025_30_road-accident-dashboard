@@ -65,7 +65,7 @@ This policy brief is shared with authorities, who begin discussions on implement
 
 ## App sketch & brief description
 
-![app sketch](../img/sketch.png)
+![app sketch](../img/app-sketch.png)
 
 ### Dashboard Overview
 
