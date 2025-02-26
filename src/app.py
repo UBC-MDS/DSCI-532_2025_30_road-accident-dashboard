@@ -16,6 +16,7 @@ df = pd.read_csv(file_path, nrows=100)
 
 # Initialize the app with Bootstrap for styling
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+server = app.server
 
 # Layout
 app.layout = dbc.Container(
@@ -103,4 +104,4 @@ def update_graph(selected_urban_rural, selected_time):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
