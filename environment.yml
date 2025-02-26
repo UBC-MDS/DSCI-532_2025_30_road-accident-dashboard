@@ -7,6 +7,7 @@ dependencies:
     - altair-all
     - dash
     - dash-bootstrap-components
+    - gunicorn
     - plotly
     - tabulate
     - lxml
