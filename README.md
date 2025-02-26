@@ -65,7 +65,7 @@ We welcome contributions! Please refer to our [contributing guidelines](CONTRIBU
 
 ### Code
 
-[`LICENSE`](LICENSE.md): The code within this repository is licensed under the [MIT][mit] license.
+The code within this repository is licensed under the [MIT][mit] license.
 
 [mit]: http://www.opensource.org/licenses/MIT "The MIT License | Open Source Initiative"
 
@@ -73,7 +73,7 @@ We welcome contributions! Please refer to our [contributing guidelines](CONTRIBU
 
 [![CC BY 4.0 license button][cc-by-png]][cc-by]
 
-The content/text within the project is licensed under a [Creative Commons Attribution 4.0 International License][cc-by].
+The non-code content within the project is licensed under a [Creative Commons Attribution 4.0 International License][cc-by].
 
 [cc-by-png]: https://licensebuttons.net/l/by/4.0/88x31.png#floatleft "CC BY 4.0 license button"
 [cc-by]: https://creativecommons.org/licenses/by/4.0/ "Creative Commons Attribution 4.0 International License"
