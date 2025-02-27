@@ -1,35 +1,43 @@
 import dash_bootstrap_components as dbc
 
-# TODO: To be edited by Tien!
 color='white'
 
-card_1 = dbc.Card(
+style = {
+    'height': 220
+}
+
+card_total_acc = dbc.Card(
     color=color,
-    style={"height": 200},
-    id="card-1"
+    style=style,
+    id="card-total-acc"
+)
+card_total_fatal = dbc.Card(
+    color=color,
+    style=style,
+    id="card-total-fatal"
+)
+card_avg_resp = dbc.Card(
+    color=color,
+    style=style,
+    id="card-avg-resp"
+)
+card_total_eco_loss = dbc.Card(
+    
+    color=color,
+    style=style,
+    id="card-total-eco-loss"
 )
 
-card_2 = dbc.Card(
+card_leading_cause = dbc.Card(
     color=color,
-    style={"height": 200},
-    id="card-2"
-)
-
-card_3 = dbc.Card(
-    color=color,
-    style={"height": 200},
-    id="card-3"
-)
-
-card_4 = dbc.Card(
-    color=color,
-    style={"height": 200},
-    id="card-4"
+    style=style,
+    id="card-leading-cause"
 )
 
 summary_cards = dbc.Row([
-    dbc.Col(card_1),
-    dbc.Col(card_2),
-    dbc.Col(card_3),
-    dbc.Col(card_4)
+    dbc.Col(card_total_acc),
+    dbc.Col(card_total_fatal),
+    dbc.Col(card_avg_resp),
+    dbc.Col(card_total_eco_loss),
+    dbc.Col(card_leading_cause)
 ])
