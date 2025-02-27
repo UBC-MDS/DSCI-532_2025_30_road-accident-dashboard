@@ -18,13 +18,17 @@ navbar = dbc.NavbarSimple(
             dbc.NavLink(
                 NAVBAR_GITHUB_BUTTON_LABEL, 
                 href=PROJECT_GITHUB_LINK, 
-                target="_blank")),
+                target="_blank",
+                style={'border': '0px'}
+            )
+        ),
         dbc.Button(
             NAVBAR_ABOUT_BUTTON_LABEL, 
             id="open-about", 
             color="secondary", 
             className="ml-2", 
-            style={'border': '0px'}),
+            style={'border': '0px'}
+        ),
     ],
     brand=NAVBAR_PROJECT_TITLE,
     brand_href="#",
@@ -38,13 +42,14 @@ navbar = dbc.NavbarSimple(
     fluid=True
 )
 
+
 about_text = html.Div(
     [
         html.P(
             [
-                "This app illustrates an overview of happiness in countries around the world across 5 years.",
+                "Foo Bar",
                 html.Br(),
-                "The dashboard only includes the countries that appear in the dataset of all 5 years. The remaining countries were then re-ranked.",
+                "Foo Bar",
             ],
             id='about-text',
             style=about_text_style  
