@@ -6,10 +6,20 @@
     margin-right: 10px;
 }
 
-.btn-secondary{
+.btn-secondary {
     background-color: #1E3A8A;
 }
 
-.btn-secondary:hover{
+.btn-secondary:hover {
+    background-color: #4C75B0;
+}
+
+.nav-link {
+    color: white;
+    background-color: #1E3A8A;
+    border-radius: 5px;
+}
+
+.nav-link:hover {
     background-color: #4C75B0;
 }

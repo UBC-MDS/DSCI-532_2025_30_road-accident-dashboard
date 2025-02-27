@@ -34,7 +34,7 @@ navbar = dbc.NavbarSimple(
             id="open-about", 
             color="secondary", 
             className="ml-2", 
-            style={'border': '0px'}
+            style={'border': '0px', 'margin-left': '5px'}
         ),
     ],
     brand=NAVBAR_PROJECT_TITLE,
