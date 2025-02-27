@@ -14,7 +14,7 @@ emergency_response_time_chart = dbc.Card(children=[html.H5(CHART_EMERGENCY_RESPO
     body=True) 
 
 categorical_chart = dbc.Card(children=[html.H5(CHART_CATEGORICAL_BY_WEATHER_CONDITION),
-    dcc.Loading(children=[dvc.Vega(id='categorical_chart', spec={})])],
+    dcc.Loading(children=[dvc.Vega(id='weather_chart', spec={})])],
     body=True)
 
 age_chart = dbc.Card(children=[html.H5(CHART_AGE_LABEL),

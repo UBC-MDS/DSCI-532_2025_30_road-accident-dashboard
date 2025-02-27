@@ -7,7 +7,7 @@ from components.charts import emergency_response_time_chart, categorical_chart, 
 from data.canadian_data import canadian_data
 from string_resources.en import APP_MASTER_TITLE
 import plotly.express as px
-import callbacks
+import callbacks # DO NOT DELETE THIS x_x
 
 # App init
 data = canadian_data
@@ -43,4 +43,4 @@ app.layout = dbc.Container([
 ])
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
