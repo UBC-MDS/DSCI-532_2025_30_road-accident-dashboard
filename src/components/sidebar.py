@@ -11,6 +11,12 @@ sidebar = dbc.Col([
     dcc.Dropdown(),
     html.Br(),
     dcc.Dropdown(),
+    html.Br(),
+    dcc.Dropdown(),
+    html.Br(),
+    dcc.Dropdown(),
+    html.Br(),
+    dcc.Dropdown(),
     ],
     md=3,
     style={

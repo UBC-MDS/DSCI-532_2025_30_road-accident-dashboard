@@ -1,8 +1,9 @@
-from dash import Dash, html, dcc, Input, Output
+from dash import Dash
 import dash_bootstrap_components as dbc
 from components.navbar import navbar
 from components.sidebar import sidebar
 from components.summary_cards import summary_cards
+from components.vizboard import vizboard
 from data.canadian_data import canadian_data
 from string_resources.en import APP_MASTER_TITLE
 import plotly.express as px
@@ -21,7 +22,8 @@ app.layout = dbc.Container([
     dbc.Row([
         sidebar,
         dbc.Col(
-            summary_cards,
+            dbc.Row(summary_cards),
+            dbc.Row(),
             md=9
         )
     ])
