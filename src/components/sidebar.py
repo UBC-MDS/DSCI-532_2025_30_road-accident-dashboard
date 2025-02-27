@@ -36,8 +36,7 @@ sidebar = dbc.Col([
     html.Br(),
     dcc.Dropdown(),
     html.Br(),
-    dcc.Dropdown(),
-    ],
+    dcc.Dropdown()],
     md=3,
     style={
         'background-color': '#e6e6e6',

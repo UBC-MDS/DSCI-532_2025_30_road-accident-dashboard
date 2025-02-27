@@ -49,8 +49,9 @@ navbar = dbc.NavbarSimple(
     fluid=True
 )
 
-about_text = html.P(
-    ["Road accidents are a major public safety concern, leading to significant loss of life, economic costs, and infrastructural damage. Understanding the factors contributing to accidents—such as weather conditions, vehicle types, and driver behaviors—can help policymakers and city planners design safer road systems. This dashboard provides interactive visualizations to explore Canadian accident trends, analyze accident severity across different regions, and identify key risk factors. By offering data-driven insights, it helps decision-makers implement targeted interventions to improve road safety."],
+about_text = html.Div([
+    html.P(["Road accidents are a major public safety concern, leading to significant loss of life, economic costs, and infrastructural damage. Understanding the factors contributing to accidents—such as weather conditions, vehicle types, and driver behaviors—can help policymakers and city planners design safer road systems. This dashboard provides interactive visualizations to explore Canadian accident trends, analyze accident severity across different regions, and identify key risk factors. By offering data-driven insights, it helps decision-makers implement targeted interventions to improve road safety."]),
+    html.P(["Creator: Franklin Aryee, Michael Suriawan, Nhan Tien Nguyen"]),
+    html.P(["Last Deployment Date: March 1st 2025"])],
     id="about-text",
-    style=about_text_style  
-)
+    style=about_text_style)
