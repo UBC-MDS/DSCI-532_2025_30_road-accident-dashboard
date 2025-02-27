@@ -31,7 +31,7 @@ navbar = dbc.NavbarSimple(
     brand_style={'font-size' : '40px',
                  'margin-left': 50},
     id='custom-navbar', 
-    color="primary",  
+    color="danger",  
     dark=True, 
     style={'border-radius': 5, 
            'padding-right': 0},
