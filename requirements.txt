@@ -1,0 +1,7 @@
+altair==5.5.0
+dash==2.18.2
+dash-bootstrap-components==1.7.1
+dash-vega-components==0.11.0
+gunicorn==23.0.0
+pandas==2.2.3
+numpy==2.2.3
