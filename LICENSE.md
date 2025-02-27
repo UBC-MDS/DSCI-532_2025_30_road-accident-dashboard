@@ -19,3 +19,14 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+This project includes content (such as documentation, reports and images) that is licensed under the **Creative Commons Attribution 4.0 International (CC BY 4.0) License**.
+
+You are free to:
+
+- **Share** — copy and redistribute the material in any medium or format.
+- **Adapt** — remix, transform, and build upon the material for any purpose, even commercially.
+
+You can view the full license here:  [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/)
