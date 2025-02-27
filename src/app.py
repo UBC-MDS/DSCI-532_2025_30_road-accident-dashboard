@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 from components.navbar import navbar
 from components.sidebar import sidebar
 from components.summary_cards import summary_cards
-from components.vizboard import line_chart
+from components.charts import emergency_response_time_chart, categorical_chart, age_chart, line_chart
 from data.canadian_data import canadian_data
 from string_resources.en import APP_MASTER_TITLE
 import plotly.express as px
@@ -27,12 +27,12 @@ app.layout = dbc.Container([
             dbc.Row(summary_cards),
             html.Br(),
             dbc.Row([
-                dbc.Col(line_chart),
-                dbc.Col(line_chart),
+                dbc.Col(emergency_response_time_chart),
+                dbc.Col(categorical_chart),
             ]),
             html.Br(),
             dbc.Row([
-                dbc.Col(line_chart),
+                dbc.Col(age_chart),
                 dbc.Col(line_chart),
             ]),
             ], md=9
