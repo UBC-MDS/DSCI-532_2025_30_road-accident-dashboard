@@ -26,19 +26,20 @@ def get_emergency_response_time_category(input_category):
         return None, None
 
 def get_emergency_response_time_chart(df, input_category):
-    category, category_label = get_emergency_response_time_category(input_category)
+    category_label, category_numeric = get_emergency_response_time_category(input_category)
     chart = alt.Chart(df).mark_boxplot().encode(
         x=alt.X(
-        category_label, 
-        title=category, 
+        category_numeric, 
+        title=category_label, 
         sort=alt.EncodingSortField(
-            field='Emergency Response Time',  # Field to sort by
-            op='median',               # Sort by median value
-            order='descending'         # Order descending (change to 'ascending' if needed)
+            field='Emergency Response Time',
+            op='median',
+            order='descending'
         )
     ),
-        y=alt.Y('Emergency Response Time:Q', title="Emergency Response Time"),  # Quantitative variable
-        color=alt.Color(category_label, legend=None) # Color by category for better visualization
+        y=alt.Y('Emergency Response Time:Q', title="Emergency Response Time (minutes)"),
+        color=alt.Color(category_numeric, legend=None),
+        tooltip=[category_numeric, 'Emergency Response Time:Q', category_numeric],
     ).properties(
         width=300,
         height=250
@@ -55,17 +56,17 @@ def get_weather_category(input_category):
         return None, None
 
 def get_weather_chart(df, input_category):
-    category, _ = get_weather_category(input_category)
+    _, category_numeric = get_weather_category(input_category)
     chart = alt.Chart(df).mark_bar().encode(
         x=alt.X('Weather Conditions', sort='-y'),
         y=alt.Y('count():Q', axis=alt.Axis(title='Accident Count')),
-        color=alt.Color(category,
+        color=alt.Color(category_numeric,
             legend=alt.Legend(
                 orient='none',
                 legendY=-50,
                 direction='horizontal',
                 titleAnchor='middle')),
-        tooltip=['Weather Conditions', 'count():Q', category],
+        tooltip=['Weather Conditions', 'count():Q', category_numeric],
     ).properties(
         width=375,
         height=217
@@ -82,16 +83,17 @@ def get_age_chart_category(input_category):
         return None, None
 
 def get_age_chart(df, input_category):
-    category, _ = get_age_chart_category(input_category)
+    _, category_numeric = get_age_chart_category(input_category)
     chart = alt.Chart(df).mark_bar().encode(
         x=alt.X('count():Q', axis=alt.Axis(title='Accident Count')),
         y=alt.Y('Driver Age Group', sort=['61+', '41-60', '26-40', '18-25', '<18']),
-        color=alt.Color(category,
+        color=alt.Color(category_numeric,
             legend=alt.Legend(
                 orient='none',
                 legendY=-50,
                 direction='horizontal',
                 titleAnchor='middle')),
+        tooltip=['count():Q', 'Driver Age Group', category_numeric],
     ).properties(
         width=290,
         height=213
@@ -108,20 +110,32 @@ def get_line_chart_category(input_category):
         return None, None
 
 def get_line_chart(df, input_category):
-    category, category_label = get_line_chart_category(input_category)
-    accident_counts = df.groupby(['Year', category]).size().reset_index(name='Accident Count')
-    chart = alt.Chart(accident_counts).mark_line().encode(
+    category_label, category_numeric = get_line_chart_category(input_category)
+    accident_counts = df.groupby(['Year', category_label]).size().reset_index(name='Accident Count')
+    
+    line = alt.Chart(accident_counts).mark_line().encode(
         x='Year:O',
         y='Accident Count:Q',
-        color=alt.Color(category_label,
+        color=alt.Color(category_numeric,
             legend=alt.Legend(
                 orient='none',
                 legendY=-50,
                 direction='horizontal',
                 titleAnchor='middle')),
-        tooltip=['Year', category, 'Accident Count']).properties(
+    )
+    
+    points = alt.Chart(accident_counts).mark_point().encode(
+        x='Year:O',
+        y='Accident Count:Q',
+        color=alt.Color(category_numeric, legend=None),
+        tooltip=['Year:O', 'Accident Count:Q', category_numeric]
+    )
+    
+    chart = (line + points).properties(
         width=400,
-        height=200)
+        height=200
+    )
+    
     return chart
 
 @callback(
