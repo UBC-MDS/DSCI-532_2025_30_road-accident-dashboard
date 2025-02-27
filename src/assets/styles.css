@@ -5,3 +5,11 @@
 .custom-radio-items input {
     margin-right: 10px;
 }
+
+.btn-secondary{
+    background-color: #1E3A8A;
+}
+
+.btn-secondary:hover{
+    background-color: #4C75B0;
+}
