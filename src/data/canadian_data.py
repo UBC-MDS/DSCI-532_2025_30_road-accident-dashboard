@@ -1,6 +1,6 @@
 import pandas as pd
 
-global_data = pd.read_csv("../data/road_accident_dataset.csv")
+global_data = pd.read_csv("data/raw/road_accident_dataset.csv")
 raw_canadian_data = global_data[global_data["Country"] == "Canada"]
 
 # List of columns
