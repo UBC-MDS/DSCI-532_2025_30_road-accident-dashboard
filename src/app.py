@@ -23,7 +23,7 @@ app.layout = dbc.Container([
     ]),
     html.Br(),
     dbc.Row([
-        sidebar,
+        dbc.Col(sidebar),
         html.Br(),
         dbc.Col([
             dbc.Row(summary_cards),

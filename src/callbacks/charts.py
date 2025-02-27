@@ -94,7 +94,7 @@ def get_line_chart(df, input_category):
     
     line = alt.Chart(accident_counts).mark_line().encode(
         x='Year:O',
-        y='Accident Count:Q',
+        y=alt.Y('Accident Count:Q').scale(zero=False),
         color=alt.Color(category_numeric,
             legend=alt.Legend(
                 orient='none',
