@@ -14,7 +14,11 @@ SIDEBAR_GROUP_BY_OPTION_TIME = "Time of Accident"
 
 # CHARTS
 CHART_EMERGENCY_RESPONSE_TIME_LABEL = "Emergency Response Time"
+CHART_EMERGENCY_RESPONSE_TIME_Y_AXIS_LABEL = "Emergency Response Time (minutes)"
 CHART_CATEGORICAL_BY_WEATHER_CONDITION = "Total Accidents by Weather Conditions"
 CHART_CATEGORICAL_BY_ROAD_CONDITION = "Total Accidents by Road Conditions"
 CHART_AGE_LABEL = "Total Accidents by Age"
 CHART_LINE_LABEL = "Total Accidents Over Time"
+CHART_GROUP_BY_SEVERITY_LABEL = "Accident Severity"
+CHART_GROUP_BY_TIME_LABEL = "Time of Day"
+CHART_ACCIDENT_COUNT_Y_AXIS_LABEL = "Accident Count"

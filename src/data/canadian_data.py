@@ -26,6 +26,3 @@ canadian_data = raw_canadian_data[[
     'Emergency Response Time', 'Traffic Volume', 'Road Condition',
     'Accident Cause', 'Insurance Claims', 'Medical Cost', 'Economic Loss',
     'Population Density']]
-
-# helper data for dropdowns
-group_by_categories = ['Accident Severity', 'Time of Day']

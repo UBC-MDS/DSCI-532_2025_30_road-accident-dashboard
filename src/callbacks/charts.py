@@ -3,6 +3,12 @@ import pandas as pd
 from dash import Input, Output, callback
 from constants.constants import GROUP_BY_SEVERITY, GROUP_BY_TIME
 from data.canadian_data import canadian_data
+from string_resources.en import (
+    CHART_GROUP_BY_SEVERITY_LABEL,
+    CHART_GROUP_BY_TIME_LABEL,
+    CHART_EMERGENCY_RESPONSE_TIME_Y_AXIS_LABEL,
+    CHART_ACCIDENT_COUNT_Y_AXIS_LABEL
+)
 import functools
 
 alt.data_transformers.enable("vegafusion")
@@ -16,28 +22,28 @@ def get_data():
 def filter_data(df):
     return df
 
-def get_emergency_response_time_category(input_category):
+def get_category(input_category):
     # python does not have switch-case SMH
     if input_category == GROUP_BY_SEVERITY:
-        return "Accident Severity", "Accident Severity:N"
+        return CHART_GROUP_BY_SEVERITY_LABEL, "Accident Severity:N"
     elif input_category == GROUP_BY_TIME:
-        return "Time of Day", "Time of Day:N"
+        return CHART_GROUP_BY_TIME_LABEL, "Time of Day:N"
     else:
         return None, None
 
 def get_emergency_response_time_chart(df, input_category):
-    category_label, category_numeric = get_emergency_response_time_category(input_category)
+    category_label, category_numeric = get_category(input_category)
     chart = alt.Chart(df).mark_boxplot().encode(
         x=alt.X(
         category_numeric, 
         title=category_label, 
         sort=alt.EncodingSortField(
-            field='Emergency Response Time',
+            field="Emergency Response Time",
             op='median',
             order='descending'
         )
     ),
-        y=alt.Y('Emergency Response Time:Q', title="Emergency Response Time (minutes)"),
+        y=alt.Y('Emergency Response Time:Q', title=CHART_EMERGENCY_RESPONSE_TIME_Y_AXIS_LABEL),
         color=alt.Color(category_numeric, legend=None),
         tooltip=[category_numeric, 'Emergency Response Time:Q', category_numeric],
     ).properties(
@@ -46,20 +52,11 @@ def get_emergency_response_time_chart(df, input_category):
     )
     return chart
 
-def get_weather_category(input_category):
-    # python does not have switch-case SMH
-    if input_category == GROUP_BY_SEVERITY:
-        return "Accident Severity", "Accident Severity:N"
-    elif input_category == GROUP_BY_TIME:
-        return "Time of Day", "Time of Day:N"
-    else:
-        return None, None
-
 def get_weather_chart(df, input_category):
-    _, category_numeric = get_weather_category(input_category)
+    _, category_numeric = get_category(input_category)
     chart = alt.Chart(df).mark_bar().encode(
         x=alt.X('Weather Conditions', sort='-y'),
-        y=alt.Y('count():Q', axis=alt.Axis(title='Accident Count')),
+        y=alt.Y('count():Q', axis=alt.Axis(title=CHART_ACCIDENT_COUNT_Y_AXIS_LABEL)),
         color=alt.Color(category_numeric,
             legend=alt.Legend(
                 orient='none',
@@ -73,19 +70,10 @@ def get_weather_chart(df, input_category):
     )
     return chart
 
-def get_age_chart_category(input_category):
-    # python does not have switch-case SMH
-    if input_category == GROUP_BY_SEVERITY:
-        return "Accident Severity", "Accident Severity:N"
-    elif input_category == GROUP_BY_TIME:
-        return "Time of Day", "Time of Day:N"
-    else:
-        return None, None
-
 def get_age_chart(df, input_category):
-    _, category_numeric = get_age_chart_category(input_category)
+    _, category_numeric = get_category(input_category)
     chart = alt.Chart(df).mark_bar().encode(
-        x=alt.X('count():Q', axis=alt.Axis(title='Accident Count')),
+        x=alt.X('count():Q', axis=alt.Axis(title=CHART_ACCIDENT_COUNT_Y_AXIS_LABEL)),
         y=alt.Y('Driver Age Group', sort=['61+', '41-60', '26-40', '18-25', '<18']),
         color=alt.Color(category_numeric,
             legend=alt.Legend(
@@ -100,17 +88,8 @@ def get_age_chart(df, input_category):
     )
     return chart
 
-def get_line_chart_category(input_category):
-    # python does not have switch-case SMH
-    if input_category == GROUP_BY_SEVERITY:
-        return "Accident Severity", "Accident Severity:N"
-    elif input_category == GROUP_BY_TIME:
-        return "Time of Day", "Time of Day:N"
-    else:
-        return None, None
-
 def get_line_chart(df, input_category):
-    category_label, category_numeric = get_line_chart_category(input_category)
+    category_label, category_numeric = get_category(input_category)
     accident_counts = df.groupby(['Year', category_label]).size().reset_index(name='Accident Count')
     
     line = alt.Chart(accident_counts).mark_line().encode(
@@ -126,7 +105,7 @@ def get_line_chart(df, input_category):
     
     points = alt.Chart(accident_counts).mark_point().encode(
         x='Year:O',
-        y='Accident Count:Q',
+        y=alt.Y('Accident Count:Q', title=CHART_ACCIDENT_COUNT_Y_AXIS_LABEL),
         color=alt.Color(category_numeric, legend=None),
         tooltip=['Year:O', 'Accident Count:Q', category_numeric]
     )
