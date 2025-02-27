@@ -1,0 +1,25 @@
+.custom-radio-items label {
+    margin-left: 10px;
+}
+
+.custom-radio-items input {
+    margin-right: 10px;
+}
+
+.btn-secondary {
+    background-color: #1E3A8A;
+}
+
+.btn-secondary:hover {
+    background-color: #4C75B0;
+}
+
+.nav-link {
+    color: white;
+    background-color: #1E3A8A;
+    border-radius: 5px;
+}
+
+.nav-link:hover {
+    background-color: #4C75B0;
+}
