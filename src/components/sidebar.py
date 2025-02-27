@@ -5,6 +5,7 @@ from string_resources.en import SIDEBAR_TITLE
 # TODO: TO BE EDITED BY FRANKLIN HERE
 sidebar = dbc.Col([
     html.H5(SIDEBAR_TITLE),
+    dcc.Checklist(id='load_data', options=[' Load Data']),
     html.Br(),
     dcc.Dropdown(),
     html.Br(),
