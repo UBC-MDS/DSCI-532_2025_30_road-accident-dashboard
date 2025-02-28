@@ -62,8 +62,6 @@ group_by_radio = dcc.RadioItems(
     inline=True,
     className="custom-radio-items",
 )
-
-# TODO: TO BE EDITED BY FRANKLIN HERE
 sidebar = dbc.Col(
     [
         html.H4(SIDEBAR_TITLE),
@@ -71,21 +69,63 @@ sidebar = dbc.Col(
         html.H6(SIDEBAR_GROUP_BY_LABEL),
         group_by_radio,
         html.Br(),
+        html.Label("Settlement Type"),
         dcc.Dropdown(
-            id="urban-rural-dropdown",
+            id="urban-rural",
             options=[{"label": r, "value": r} for r in get_unique("Urban/Rural")],
             multi=True,
-            placeholder="Select multiple settlement types",
+            placeholder="Select one or more...",
         ),
         html.Br(),
-        dcc.Dropdown(),
+        html.Label("Season"),
+        dcc.Dropdown(
+            id="season",
+            options=[{"label": r, "value": r} for r in get_unique("Season")],
+            multi=True,
+            placeholder="Select one or more...",
+        ),
         html.Br(),
-        dcc.Dropdown(),
+        html.Label("Weather Condition"),
+        dcc.Dropdown(
+            id="weather-condition",
+            options=[
+                {"label": r, "value": r} for r in get_unique("Weather Conditions")
+            ],
+            multi=True,
+            placeholder="Select one or more...",
+        ),
         html.Br(),
-        dcc.Dropdown(),
+        html.Label("Road Condition"),
+        dcc.Dropdown(
+            id="road-condition",
+            options=[{"label": r, "value": r} for r in get_unique("Road Condition")],
+            multi=True,
+            placeholder="Select one or more...",
+        ),
         html.Br(),
-        dcc.Dropdown(),
+        html.Label("Time of day"),
+        dcc.Dropdown(
+            id="time-of-day",
+            options=[{"label": r, "value": r} for r in get_unique("Time of Day")],
+            multi=True,
+            placeholder="Select one or more...",
+        ),
+        html.Br(),
+        html.Br(),
+        html.Label("Year"),
+        dcc.RangeSlider(
+            id="year-slider",
+            min=min_year,
+            max=max_year,
+            value=[min_year, max_year],
+            step=1,
+            marks={year: str(year) for year in range(min_year, max_year + 1, 6)},
+            tooltip={"always_visible": True, "placement": "bottom"},
+            updatemode="mouseup",
+        ),
+        html.Br(),
+        html.Label("Month"),
+        month_checklist,
     ],
-    # md=3,
     style={"background-color": "#e6e6e6", "padding": 15, "border-radius": 3},
 )
