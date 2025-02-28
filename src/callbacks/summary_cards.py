@@ -7,14 +7,41 @@ from constants.constants import GROUP_BY_SEVERITY, GROUP_BY_TIME
 from data.canadian_data import canadian_data
 import functools
 
+
 # load data for charts
 @functools.lru_cache()
 def get_data():
     return canadian_data
 
-# TODO: Add filter here once Franklin is done with the side panel
-def filter_data(df):
+
+def filter_data(
+    df,
+    urban_rural,
+    season,
+    weather_condition,
+    road_condition,
+    time_of_day,
+    year_range,
+    months,
+):
+    """Filter the data based on sidebar selections."""
+    if urban_rural:
+        df = df[df["Urban/Rural"].isin(urban_rural)]
+    if season:
+        df = df[df["Season"].isin(season)]
+    if weather_condition:
+        df = df[df["Weather Conditions"].isin(weather_condition)]
+    if road_condition:
+        df = df[df["Road Condition"].isin(road_condition)]
+    if time_of_day:
+        df = df[df["Time of Day"].isin(time_of_day)]
+    if year_range:
+        df = df[(df["Year"] >= year_range[0]) & (df["Year"] <= year_range[1])]
+    if months:
+        df = df[df["MonthX"].isin(months)]
     return df
+
+
 
 def get_category(input_category):
     # python does not have switch-case SMH
