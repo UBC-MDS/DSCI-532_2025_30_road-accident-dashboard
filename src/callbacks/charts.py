@@ -103,7 +103,7 @@ def get_weather_chart(df, input_category):
             ),
             tooltip=["Weather Conditions", "count():Q", category_numeric],
         )
-        .properties(width=375, height=217)
+        .properties(width=300, height=217)
     )
     return chart
 
@@ -129,7 +129,7 @@ def get_age_chart(df, input_category):
             ),
             tooltip=["count():Q", "Driver Age Group", category_numeric],
         )
-        .properties(width=290, height=213)
+        .properties(width=290, height=238)
     )
     return chart
 
@@ -173,12 +173,37 @@ def get_line_chart(df, input_category):
 
     return chart
 
+def get_road_chart(df, input_category):
+    _, category_numeric = get_category(input_category)
+    chart = (
+        alt.Chart(df)
+        .mark_bar()
+        .encode(
+            x=alt.X("Road Condition", sort="-y"),
+            y=alt.Y(
+                "count():Q", axis=alt.Axis(title=CHART_ACCIDENT_COUNT_Y_AXIS_LABEL)
+            ),
+            color=alt.Color(
+                category_numeric,
+                legend=alt.Legend(
+                    orient="none",
+                    legendY=-50,
+                    direction="horizontal",
+                    titleAnchor="middle",
+                ),
+            ),
+            tooltip=["Road Condition", "count():Q", category_numeric],
+        )
+        .properties(width=300, height=184)
+    )
+    return chart
 
 @callback(
     Output("emergency_response_time_chart", "spec"),
     Output("weather_chart", "spec"),
     Output("age_chart", "spec"),
     Output("line_chart", "spec"),
+    Output("road_chart", "spec"),
     Input("group_by_radio", "value"),
     Input("urban-rural", "value"),
     Input("season", "value"),
@@ -215,9 +240,11 @@ def load_chart(
     weather_chart = get_weather_chart(df, group_by_category)
     age_chart = get_age_chart(df, group_by_category)
     line_chart = get_line_chart(df, group_by_category)
+    road_chart = get_road_chart(df, group_by_category)
     return (
         emergency_response_time_chart.to_dict(format="vega"),
         weather_chart.to_dict(format="vega"),
         age_chart.to_dict(format="vega"),
-        line_chart.to_dict(format="vega")
+        line_chart.to_dict(format="vega"),
+        road_chart.to_dict(format="vega"),
     )
