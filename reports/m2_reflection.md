@@ -46,14 +46,23 @@ Default Filtering Behavior
 
 ## Summary Cards
 
-TO BE FILLED BY TIEN
+The summary cards were implemented relatively closely to the proposed sketch. We ended up displaying these summary statistics in the dashboard:
+
+- Total number of accidents
+- Total fatalities
+- Average emergency response time
+- Total economic loss
+- Leading cause of accident
+
+The only deviation that we made was that we initially wanted an economic cost per capita stats. However, the dataset does not have population data but rather population density. We decided to pivot away from economic loss per capita to total economic lost instead!
 
 ## Visualization Board
 
-The four charts that were implemented:
+The five charts that were implemented:
 
 - Emergency Response Time box plot
 - Accident Count by Weather Conditions
+- Accident Count by Road Conditions
 - Accident Count by Age Groups
 - Accident Count by Year
 

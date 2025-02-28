@@ -5,7 +5,8 @@ from components.sidebar import sidebar
 from components.summary_cards import summary_cards
 from components.charts import (
     emergency_response_time_chart,
-    categorical_chart,
+    weather_chart,
+    road_condition_chart,
     age_chart,
     line_chart,
 )
@@ -42,14 +43,14 @@ app.layout = dbc.Container(
                         dbc.Row(
                             [
                                 dbc.Col(emergency_response_time_chart),
-                                dbc.Col(categorical_chart),
+                                dbc.Col(age_chart),
                             ]
                         ),
                         html.Br(),
                         dbc.Row(
                             [
-                                dbc.Col(age_chart),
-                                # dbc.Col(line_chart),
+                                dbc.Col(weather_chart),
+                                dbc.Col(road_condition_chart),
                             ]
                         ),
                     ],
