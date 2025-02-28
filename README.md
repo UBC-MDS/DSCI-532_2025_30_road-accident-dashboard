@@ -25,7 +25,7 @@ The interactive visualizations update based on user inputs, providing actionable
 
 ![gif](https://raw.githubusercontent.com/UBC-MDS/DSCI-532_2025_30_road-accident-dashboard/refs/heads/main/img/demo.gif)
 
-Try it out: [link](mds-2025-road-accident-dashboard.onrender.com)
+Try it out: [link](https://mds-2025-road-accident-dashboard.onrender.com/)
 
 ## Support
 
