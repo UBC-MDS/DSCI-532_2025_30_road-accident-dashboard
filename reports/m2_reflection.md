@@ -4,7 +4,45 @@ Here are what we have implemented so far:
 
 ## User Filter Sidebar
 
-TO BE FILLED BY FRANKLIN
+We have implemented all the proposed filter widgets in the sidebar. The sidebar dynamically generates the unique options for each filter directly from the dataset by importing the `canadian_data` into `sidebar.py`. This ensures that any changes in the data are automatically reflected in the filter options. For example, the dropdown for `Time of Day` displays only the unique values present in the dataset.
+
+The following filters were implemented:
+
+- `Settlement Type`
+  
+A dropdown that allows the user to select one or more categories (e.g., Urban and Rural).
+
+- `Season`
+  
+A dropdown with the four seasons (Summer, Autumn, Winter, and Spring). The Season column was computed by mapping full month names to their corresponding season.
+
+- `Weather Condition`
+
+A dropdown that includes options like Rainy, Foggy, Snowy, Windy, and Clear.
+
+- `Road Condition`
+
+A dropdown with options such as Icy, Snow-covered, Wet, and Dry.
+
+- `Time of Day`
+
+A dropdown offering options such as Morning, Afternoon, Evening, and Night.
+
+- `Year Range Slider`
+
+A double-ended slider was used for year selection. This slider is set up with its minimum and maximum values derived from the dataset (i.e., `min_year` and `max_year`). A tooltip is included to display the exact years when the slider handles are adjusted.
+
+- `Month Checklist`
+  
+Since the dataset does not include day-level information, we could not implement a full calendar. Instead, we created a month checklist using a `dcc.Checklist` that displays a grid of month buttons (computed by slicing the month names to their first three letters, stored in the `MonthX` column). This allows users to filter the data by selecting one or more months in which accidents occurred.
+
+Default Filtering Behavior
+
+- All dropdown filters (`Settlement Type`, `Season`, `Weather Condition`, `Road Condition`, and `Time of Day`) start with no selection, which means that by default, the dashboard shows data for all available categories.
+
+- The year slider is initially set to span from the earliest to the latest year in the dataset, thereby including all years by default.
+
+- With no months selected by default, the month filter does not restrict the data. Hence, all months are shown until the user makes a selection.
 
 ## Summary Cards
 
