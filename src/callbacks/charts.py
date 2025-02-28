@@ -1,5 +1,4 @@
 import altair as alt
-import pandas as pd
 from dash import Input, Output, callback
 from constants.constants import GROUP_BY_SEVERITY, GROUP_BY_TIME
 from data.canadian_data import canadian_data
