@@ -58,10 +58,11 @@ The only deviation that we made was that we initially wanted an economic cost pe
 
 ## Visualization Board
 
-The four charts that were implemented:
+The five charts that were implemented:
 
 - Emergency Response Time box plot
 - Accident Count by Weather Conditions
+- Accident Count by Road Conditions
 - Accident Count by Age Groups
 - Accident Count by Year
 
