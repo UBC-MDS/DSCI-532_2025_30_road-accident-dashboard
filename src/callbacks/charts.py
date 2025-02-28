@@ -125,10 +125,12 @@ def get_line_chart(df, input_category):
     Input('group_by_radio', 'value'),
 )
 def load_chart(group_by_category):
+    import json
     raw_df = get_data()
     df = filter_data(raw_df)
-    emergency_response_time_chart = get_emergency_response_time_chart(df, group_by_category)
-    weather_chart = get_weather_chart(df, group_by_category)
-    age_chart = get_age_chart(df, group_by_category)
-    line_chart = get_line_chart(df, group_by_category)
-    return emergency_response_time_chart.to_dict(format = "vega"), weather_chart.to_dict(format = "vega"), age_chart.to_dict(format = "vega"), line_chart.to_dict(format = "vega")
+    emergency_response_time_chart = get_emergency_response_time_chart(df, group_by_category).to_dict(format='vega')
+    weather_chart = get_weather_chart(df, group_by_category).to_dict(format='vega')
+    age_chart = get_age_chart(df, group_by_category).to_dict(format='vega')
+    line_chart = get_line_chart(df, group_by_category).to_dict(format='vega')
+
+    return emergency_response_time_chart, weather_chart, age_chart, line_chart

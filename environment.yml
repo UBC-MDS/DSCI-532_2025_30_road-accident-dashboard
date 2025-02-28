@@ -3,16 +3,16 @@ channels:
     - conda-forge
     - defaults
 dependencies:
-    - ipykernel == 6.29.5 
-    - altair-all == 5.5.0
-    - dash == 2.18.2
-    - dash-bootstrap-components == 1.7.1
-    - plotly == 6.0.0
-    - tabulate == 0.9.0 
-    - lxml == 5.3.1 
-    - pandas == 2.2.3  
-    - numpy == 2.2.3  
-    - pip == 25.0.1
-    - gunicorn == 23.0.0
+    - python=3.12
+    - ipykernel
+    - altair=5.3.0
+    - dash=2.18.2
+    - dash-bootstrap-components=1.7.1
+    - pandas=2.2.3
+    - gunicorn=23.0.0
+    - vegafusion==1.6.9
+    - vegafusion-python-embed==1.6.9
+    - vl-convert-python==1.7.0
+    - pip
     - pip:
-        - dash-vega-components == 0.11.0
+        - dash-vega-components==0.11.0
