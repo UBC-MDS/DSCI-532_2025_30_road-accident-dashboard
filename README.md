@@ -21,11 +21,17 @@ This project uses data from the [Global Road Accidents Dataset](https://www.kagg
 
 The interactive visualizations update based on user inputs, providing actionable insights for policy improvements.  
 
+## Demo
+
+![gif](https://raw.githubusercontent.com/UBC-MDS/DSCI-532_2025_30_road-accident-dashboard/refs/heads/main/img/demo.gif)
+
+Try it out: <mds-2025-road-accident-dashboard.onrender.com/>
+
 ## Support
 
 For any issues regarding running the dashboard or feature requests, please contact us using [GitHub Issues](https://github.com/UBC-MDS/DSCI-532_2025_30_road_accident_dashboard/issues).  
 
-## Installation
+## Running the App Locally
 
 1. Clone the repository:  
 
