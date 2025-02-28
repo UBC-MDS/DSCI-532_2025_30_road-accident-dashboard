@@ -15,6 +15,43 @@ def get_unique(col_name):
     return canadian_data[col_name].unique()
 
 
+# Min and Max for Year slider
+min_year, max_year = canadian_data.Year.min(), canadian_data.Year.max()
+
+# Month order
+month_order = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+]
+
+# Get unique months
+unique_months = canadian_data.MonthX.unique()
+
+# Sort based on the natural month order
+unique_months_sorted = sorted(unique_months, key=month_order.index)
+
+# Create options for the checklist
+month_options = [{"label": m, "value": m} for m in unique_months_sorted]
+
+# Create a checklist that visually appears as toggle buttons in a grid
+month_checklist = dcc.Checklist(
+    id="month-checklist",
+    options=month_options,
+    value=[],
+    inline=True,
+    className="month-checklist",
+)
+
 group_by_radio = dcc.RadioItems(
     options=[
         {"label": SIDEBAR_GROUP_BY_OPTION_SEVERITY, "value": GROUP_BY_SEVERITY},
