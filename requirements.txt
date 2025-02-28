@@ -6,3 +6,4 @@ gunicorn==23.0.0
 pandas==2.2.3
 numpy==2.2.3
 vegafusion==2.0.1
+vl-convert-python==1.7.0
