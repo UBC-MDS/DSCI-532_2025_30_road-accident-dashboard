@@ -103,7 +103,7 @@ def get_weather_chart(df, input_category):
             ),
             tooltip=["Weather Conditions", "count():Q", category_numeric],
         )
-        .properties(width=300, height=217)
+        .properties(width=330, height=217)
     )
     return chart
 
