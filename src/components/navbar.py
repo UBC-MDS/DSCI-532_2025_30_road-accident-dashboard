@@ -1,3 +1,4 @@
+from datetime import datetime
 from dash import html
 import dash_bootstrap_components as dbc
 from constants.constants import PROJECT_GITHUB_LINK
@@ -6,6 +7,9 @@ from string_resources.en import (
     NAVBAR_ABOUT_BUTTON_LABEL,
     NAVBAR_PROJECT_TITLE,
 )
+
+# Get today's date in the desired format
+today_date = datetime.today().strftime("%B %d, %Y")  # Example: "March 4, 2025"
 
 about_text_style = {
     "display": "none",
@@ -53,7 +57,9 @@ about_text = html.Div(
             ]
         ),
         html.P(["Creator: Franklin Aryee, Michael Suriawan, Nhan Tien Nguyen"]),
-        html.P(["Last Deployment Date: March 1st 2025"]),
+        html.P(
+            [f"Last Deployment Date: {today_date}"]
+        ),
     ],
     id="about-text",
     style=about_text_style,

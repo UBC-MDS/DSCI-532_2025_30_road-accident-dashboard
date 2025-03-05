@@ -1,4 +1,4 @@
-from dash import Dash, html
+from dash import Dash, html, dcc
 import dash_bootstrap_components as dbc
 from components.navbar import navbar, about_text
 from components.sidebar import sidebar
@@ -23,37 +23,38 @@ server = app.server
 # App layout
 app.layout = dbc.Container(
     [
-        dbc.Row(
-            [
-                navbar,
-                about_text,
-            ]
-        ),
+        dbc.Row([navbar, about_text]),
         html.Br(),
         dbc.Row(
             [
                 dbc.Col(sidebar),
                 html.Br(),
                 dbc.Col(
-                    [
-                        dbc.Row(summary_cards, justify="around"),
-                        html.Br(),
-                        dbc.Row(dbc.Col(line_chart)),
-                        html.Br(),
-                        dbc.Row(
-                            [
-                                dbc.Col(emergency_response_time_chart),
-                                dbc.Col(age_chart),
-                            ]
-                        ),
-                        html.Br(),
-                        dbc.Row(
-                            [
-                                dbc.Col(weather_chart),
-                                dbc.Col(road_condition_chart),
-                            ]
-                        ),
-                    ],
+                    dcc.Loading(
+                        id="loading-container",
+                        type="cube",
+                        color="#dc3545",
+                        fullscreen=False,
+                        children=[
+                            dbc.Row(summary_cards, justify="around"),
+                            html.Br(),
+                            dbc.Row(dbc.Col(line_chart)),
+                            html.Br(),
+                            dbc.Row(
+                                [
+                                    dbc.Col(emergency_response_time_chart),
+                                    dbc.Col(age_chart),
+                                ]
+                            ),
+                            html.Br(),
+                            dbc.Row(
+                                [
+                                    dbc.Col(weather_chart),
+                                    dbc.Col(road_condition_chart),
+                                ]
+                            ),
+                        ],
+                    ),
                     md=9,
                 ),
             ]

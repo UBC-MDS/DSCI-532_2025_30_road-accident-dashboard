@@ -1,5 +1,5 @@
 import altair as alt
-from dash import Input, Output, callback
+from dash import Input, Output, callback, ctx
 from constants.constants import GROUP_BY_SEVERITY, GROUP_BY_TIME
 from data.canadian_data import canadian_data
 from string_resources.en import (
@@ -77,7 +77,7 @@ def get_emergency_response_time_chart(df, input_category):
             color=alt.Color(category_numeric, legend=None),
             tooltip=[category_numeric, "Emergency Response Time:Q", category_numeric],
         )
-        .properties(width=300, height=250)
+        .properties(width=340, height=250)
     )
     return chart
 
@@ -103,7 +103,7 @@ def get_weather_chart(df, input_category):
             ),
             tooltip=["Weather Conditions", "count():Q", category_numeric],
         )
-        .properties(width=300, height=217)
+        .properties(width=330, height=217)
     )
     return chart
 
@@ -129,7 +129,7 @@ def get_age_chart(df, input_category):
             ),
             tooltip=["count():Q", "Driver Age Group", category_numeric],
         )
-        .properties(width=290, height=238)
+        .properties(width=350, height=238)
     )
     return chart
 
@@ -173,6 +173,7 @@ def get_line_chart(df, input_category):
 
     return chart
 
+
 def get_road_chart(df, input_category):
     _, category_numeric = get_category(input_category)
     chart = (
@@ -194,9 +195,10 @@ def get_road_chart(df, input_category):
             ),
             tooltip=["Road Condition", "count():Q", category_numeric],
         )
-        .properties(width=300, height=184)
+        .properties(width=350, height=184)
     )
     return chart
+
 
 @callback(
     Output("emergency_response_time_chart", "spec"),
@@ -204,6 +206,14 @@ def get_road_chart(df, input_category):
     Output("age_chart", "spec"),
     Output("line_chart", "spec"),
     Output("road_chart", "spec"),
+    Output("urban-rural", "value"),
+    Output("season", "value"),
+    Output("weather-condition", "value"),
+    Output("road-condition", "value"),
+    Output("time-of-day", "value"),
+    Output("year-slider", "value"),
+    Output("month-checklist", "value"),
+    Output("group_by_radio", "value"),
     Input("group_by_radio", "value"),
     Input("urban-rural", "value"),
     Input("season", "value"),
@@ -212,6 +222,7 @@ def get_road_chart(df, input_category):
     Input("time-of-day", "value"),
     Input("year-slider", "value"),
     Input("month-checklist", "value"),
+    Input("reset-button", "n_clicks"),
 )
 def load_chart(
     group_by_category,
@@ -222,7 +233,22 @@ def load_chart(
     time_of_day,
     year_range,
     months,
+    reset_clicks,
 ):
+    min_year, max_year = canadian_data.Year.min(), canadian_data.Year.max()
+
+    # Check if Reset Button was clicked
+    if ctx.triggered_id == "reset-button":
+        # print("Reset triggered!")
+        urban_rural = []
+        season = []
+        weather_condition = []
+        road_condition = []
+        time_of_day = []
+        year_range = [min_year, max_year]
+        months = []
+        group_by_category = GROUP_BY_SEVERITY
+
     raw_df = get_data()
     df = filter_data(
         raw_df,
@@ -234,17 +260,29 @@ def load_chart(
         year_range,
         months,
     )
-    emergency_response_time_chart = get_emergency_response_time_chart(
-        df, group_by_category
-    )
-    weather_chart = get_weather_chart(df, group_by_category)
-    age_chart = get_age_chart(df, group_by_category)
-    line_chart = get_line_chart(df, group_by_category)
-    road_chart = get_road_chart(df, group_by_category)
-    return (
-        emergency_response_time_chart.to_dict(format="vega"),
-        weather_chart.to_dict(format="vega"),
-        age_chart.to_dict(format="vega"),
-        line_chart.to_dict(format="vega"),
-        road_chart.to_dict(format="vega"),
-    )
+
+    def chart_to_dict(df):
+        return (
+            get_emergency_response_time_chart(df, group_by_category).to_dict(
+                format="vega"
+            ),
+            get_weather_chart(df, group_by_category).to_dict(format="vega"),
+            get_age_chart(df, group_by_category).to_dict(format="vega"),
+            get_line_chart(df, group_by_category).to_dict(format="vega"),
+            get_road_chart(df, group_by_category).to_dict(format="vega"),
+        )
+
+    charts = chart_to_dict(df)
+
+    filters = [
+        urban_rural,
+        season,
+        weather_condition,
+        road_condition,
+        time_of_day,
+        year_range,
+        months,
+        group_by_category,
+    ]
+
+    return (*charts, *filters)

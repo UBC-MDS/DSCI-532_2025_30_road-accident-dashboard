@@ -9,42 +9,26 @@ from string_resources.en import (
     CHART_LINE_LABEL,
 )
 
-emergency_response_time_chart = dbc.Card(
-    children=[
-        html.H5(CHART_EMERGENCY_RESPONSE_TIME_LABEL),
-        dcc.Loading(children=[dvc.Vega(id="emergency_response_time_chart", spec={})]),
-    ],
-    body=True,
-)
 
-weather_chart = dbc.Card(
-    children=[
-        html.H5(CHART_CATEGORICAL_BY_WEATHER_CONDITION),
-        dcc.Loading(children=[dvc.Vega(id="weather_chart", spec={})]),
-    ],
-    body=True,
-)
+def create_chart_card(title, chart_id):
+    return dbc.Card(
+        children=[
+            html.H5(title),
+            dcc.Loading(children=[dvc.Vega(id=chart_id, spec={})]),
+        ],
+        body=True,
+    )
 
-road_condition_chart = dbc.Card(
-    children=[
-        html.H5(CHART_CATEGORICAL_BY_ROAD_CONDITION),
-        dcc.Loading(children=[dvc.Vega(id="road_chart", spec={})]),
-    ],
-    body=True,
-)
 
-age_chart = dbc.Card(
-    children=[
-        html.H5(CHART_AGE_LABEL),
-        dcc.Loading(children=[dvc.Vega(id="age_chart", spec={})]),
-    ],
-    body=True,
+# Create chart components using the function
+emergency_response_time_chart = create_chart_card(
+    CHART_EMERGENCY_RESPONSE_TIME_LABEL, "emergency_response_time_chart"
 )
-
-line_chart = dbc.Card(
-    children=[
-        html.H5(CHART_LINE_LABEL),
-        dcc.Loading(children=[dvc.Vega(id="line_chart", spec={})]),
-    ],
-    body=True,
+weather_chart = create_chart_card(
+    CHART_CATEGORICAL_BY_WEATHER_CONDITION, "weather_chart"
 )
+road_condition_chart = create_chart_card(
+    CHART_CATEGORICAL_BY_ROAD_CONDITION, "road_chart"
+)
+age_chart = create_chart_card(CHART_AGE_LABEL, "age_chart")
+line_chart = create_chart_card(CHART_LINE_LABEL, "line_chart")
