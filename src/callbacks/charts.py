@@ -70,6 +70,7 @@ def get_emergency_response_time_chart(df, input_category):
                 sort=alt.EncodingSortField(
                     field="Emergency Response Time", op="median", order="descending"
                 ),
+                axis=alt.Axis(labelAngle=-360)
             ),
             y=alt.Y(
                 "Emergency Response Time:Q",
@@ -92,7 +93,7 @@ def get_weather_chart(df, input_category):
         alt.Chart(df)
         .mark_bar()
         .encode(
-            x=alt.X("Weather Conditions", sort="-y"),
+            x=alt.X("Weather Conditions", sort="-y", axis=alt.Axis(labelAngle=-360)),
             y=alt.Y(
                 "count():Q", axis=alt.Axis(title=CHART_ACCIDENT_COUNT_Y_AXIS_LABEL)
             ),
@@ -148,7 +149,7 @@ def get_line_chart(df, input_category):
         alt.Chart(accident_counts)
         .mark_line()
         .encode(
-            x="Year:O",
+            x=alt.X("Year:O", axis=alt.Axis(labelAngle=-360)),
             y=alt.Y("Accident Count:Q").scale(zero=False),
             color=alt.Color(
                 category_numeric,
@@ -184,7 +185,7 @@ def get_road_chart(df, input_category):
         alt.Chart(df)
         .mark_bar()
         .encode(
-            x=alt.X("Road Condition", sort="-y"),
+            x=alt.X("Road Condition", sort="-y", axis=alt.Axis(labelAngle=-360)),
             y=alt.Y(
                 "count():Q", axis=alt.Axis(title=CHART_ACCIDENT_COUNT_Y_AXIS_LABEL)
             ),
