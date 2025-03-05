@@ -14,6 +14,7 @@ summary_cards = dbc.Row(
         dbc.Col(card_total_eco_loss),
         dbc.Col(card_leading_cause),
     ],
+    className="g-3",
     justify="around",
     style={"margin": "0px", "padding": "0px"}
 )
