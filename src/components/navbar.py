@@ -8,6 +8,9 @@ from string_resources.en import (
     NAVBAR_PROJECT_TITLE,
 )
 
+# Get today's date in the desired format
+today_date = datetime.today().strftime("%B %d, %Y")  # Example: "March 4, 2025"
+
 about_text_style = {
     "display": "none",
     "backgroundColor": "#dc3545",
