@@ -1,15 +1,10 @@
 import dash_bootstrap_components as dbc
 
-color = "white"
-
-style = {"height": 220}
-
-card_total_acc = dbc.Card(color=color, style=style, id="card-total-acc")
-card_total_fatal = dbc.Card(color=color, style=style, id="card-total-fatal")
-card_avg_resp = dbc.Card(color=color, style=style, id="card-avg-resp")
-card_total_eco_loss = dbc.Card(color=color, style=style, id="card-total-eco-loss")
-
-card_leading_cause = dbc.Card(color=color, style=style, id="card-leading-cause")
+card_total_acc = dbc.Card(id="card-total-acc", body=True)
+card_total_fatal = dbc.Card(id="card-total-fatal", body=True)
+card_avg_resp = dbc.Card(id="card-avg-resp", body=True)
+card_total_eco_loss = dbc.Card(id="card-total-eco-loss", body=True)
+card_leading_cause = dbc.Card(id="card-leading-cause", body=True)
 
 summary_cards = dbc.Row(
     [
@@ -18,5 +13,7 @@ summary_cards = dbc.Row(
         dbc.Col(card_avg_resp),
         dbc.Col(card_total_eco_loss),
         dbc.Col(card_leading_cause),
-    ]
+    ],
+    justify="around",
+    style={"margin": "0px", "padding": "0px"}
 )
