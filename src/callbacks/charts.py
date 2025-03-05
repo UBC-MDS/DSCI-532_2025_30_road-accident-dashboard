@@ -221,6 +221,7 @@ def get_road_chart(df, input_category):
     Input("time-of-day", "value"),
     Input("year-slider", "value"),
     Input("month-checklist", "value"),
+    Input("reset-button", "n_clicks"),
 )
 def load_chart(
     group_by_category,
