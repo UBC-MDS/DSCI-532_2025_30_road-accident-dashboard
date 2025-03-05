@@ -129,7 +129,7 @@ def get_age_chart(df, input_category):
             ),
             tooltip=["count():Q", "Driver Age Group", category_numeric],
         )
-        .properties(width=290, height=238)
+        .properties(width=350, height=238)
     )
     return chart
 
