@@ -225,16 +225,18 @@ def load_summary_cards(
         year_range,
         months,
     )
+
+    # Build each card
     card_total_accidents = get_card_total_accidents(df)
     card_total_fatalities = get_card_total_fatalities(df)
     card_avg_response_time = get_card_avg_response_time(df)
     card_total_economic_loss = get_card_total_economic_loss(df)
     card_leading_cause = get_card_leading_cause(df)
-    output = (
+
+    return (
         card_total_accidents,
         card_total_fatalities,
         card_avg_response_time,
         card_total_economic_loss,
         card_leading_cause,
     )
-    return output
