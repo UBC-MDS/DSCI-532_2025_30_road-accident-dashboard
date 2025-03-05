@@ -1,4 +1,4 @@
-from dash import Dash, html
+from dash import Dash, html, dcc
 import dash_bootstrap_components as dbc
 from components.navbar import navbar, about_text
 from components.sidebar import sidebar
