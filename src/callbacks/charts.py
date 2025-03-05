@@ -59,6 +59,7 @@ def get_category(input_category):
 
 def get_emergency_response_time_chart(df, input_category):
     category_label, category_numeric = get_category(input_category)
+    df['Emergency Response Time'] = df['Emergency Response Time'].round(2)
     chart = (
         alt.Chart(df)
         .mark_boxplot()
@@ -75,10 +76,13 @@ def get_emergency_response_time_chart(df, input_category):
                 title=CHART_EMERGENCY_RESPONSE_TIME_Y_AXIS_LABEL,
             ),
             color=alt.Color(category_numeric, legend=None),
-            tooltip=[category_numeric, "Emergency Response Time:Q", category_numeric],
+            tooltip=[
+                alt.Tooltip(category_numeric), 
+                alt.Tooltip('Emergency Response Time:Q')
+            ]
         )
-        .properties(width=340, height=250)
-    )
+    ).properties(width=340, height=250)
+
     return chart
 
 
@@ -145,7 +149,7 @@ def get_line_chart(df, input_category):
         .mark_line()
         .encode(
             x="Year:O",
-            y="Accident Count:Q",
+            y=alt.Y("Accident Count:Q").scale(zero=False),
             color=alt.Color(
                 category_numeric,
                 legend=alt.Legend(
