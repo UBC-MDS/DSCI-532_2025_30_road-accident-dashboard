@@ -70,3 +70,31 @@
 .rc-slider-dot {
   border: 2px solid #dc3545;
 }
+
+.card-header {
+  color: black;
+  text-align: center;
+  border-top-left-radius: 5px;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.card-shadow {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  margin: 10px;
+}
+
+.reset-button {
+  background-color: #dc3545; /* Red */
+  color: white;
+  width: 100%;
+  font-size: 16px;
+  padding: 10px;
+  border: none;
+  transition: background-color 0.3s ease-in-out; /* Smooth effect */
+}
+
+.reset-button:hover {
+  background-color: #007bff !important; /* Blue on hover */
+  color: white;
+}
