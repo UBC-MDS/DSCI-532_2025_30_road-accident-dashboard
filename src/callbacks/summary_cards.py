@@ -1,16 +1,12 @@
-import altair as alt
-import pandas as pd
 from dash import Input, Output, callback, html
-import dash
 import dash_bootstrap_components as dbc
-from constants.constants import GROUP_BY_SEVERITY, GROUP_BY_TIME
 from data.canadian_data import canadian_data
 import functools
 
 
-# load data for charts
 @functools.lru_cache()
 def get_data():
+    """Load the dataset once (cached)."""
     return canadian_data
 
 
