@@ -173,6 +173,7 @@ def get_line_chart(df, input_category):
 
     return chart
 
+
 def get_road_chart(df, input_category):
     _, category_numeric = get_category(input_category)
     chart = (
