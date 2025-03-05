@@ -194,9 +194,10 @@ def get_road_chart(df, input_category):
             ),
             tooltip=["Road Condition", "count():Q", category_numeric],
         )
-        .properties(width=300, height=184)
+        .properties(width=350, height=184)
     )
     return chart
+
 
 @callback(
     Output("emergency_response_time_chart", "spec"),
@@ -204,6 +205,14 @@ def get_road_chart(df, input_category):
     Output("age_chart", "spec"),
     Output("line_chart", "spec"),
     Output("road_chart", "spec"),
+    Output("urban-rural", "value"),
+    Output("season", "value"),
+    Output("weather-condition", "value"),
+    Output("road-condition", "value"),
+    Output("time-of-day", "value"),
+    Output("year-slider", "value"),
+    Output("month-checklist", "value"),
+    Output("group_by_radio", "value"),
     Input("group_by_radio", "value"),
     Input("urban-rural", "value"),
     Input("season", "value"),
