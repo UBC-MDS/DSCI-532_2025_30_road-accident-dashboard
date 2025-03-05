@@ -43,15 +43,6 @@ unique_months_sorted = sorted(unique_months, key=month_order.index)
 # Create options for the checklist
 month_options = [{"label": m, "value": m} for m in unique_months_sorted]
 
-# Create a checklist that visually appears as toggle buttons in a grid
-month_checklist = dcc.Checklist(
-    id="month-checklist",
-    options=month_options,
-    value=[],
-    inline=True,
-    className="month-checklist",
-)
-
 group_by_radio = dcc.RadioItems(
     options=[
         {"label": SIDEBAR_GROUP_BY_OPTION_SEVERITY, "value": GROUP_BY_SEVERITY},
@@ -111,7 +102,6 @@ sidebar = dbc.Col(
             placeholder="Select one or more...",
         ),
         html.Br(),
-        html.Br(),
         html.Label("Year"),
         dcc.RangeSlider(
             id="year-slider",
@@ -125,7 +115,24 @@ sidebar = dbc.Col(
         ),
         html.Br(),
         html.Label("Month"),
-        month_checklist,
+        dcc.Checklist(
+            id="month-checklist",
+            options=[{"label": m, "value": m} for m in unique_months_sorted],
+            value=[],
+            inline=True,
+            className="month-checklist",
+        ),
+        html.Br(),
+        dbc.Button(
+            "Reset Filters",
+            id="reset-button",
+            className="reset-button mt-3",  # Keep Bootstrap spacing class
+        )
     ],
-    style={"background-color": "#e6e6e6", "padding": 15, "border-radius": 3},
+    className="h-100",
+    style={
+        "background-color": "#e6e6e6",
+        "padding": 15,
+        "border-radius": 3,
+    },
 )
