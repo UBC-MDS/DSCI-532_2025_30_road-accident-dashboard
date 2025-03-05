@@ -20,7 +20,11 @@ def filter_data(
     year_range,
     months,
 ):
-    """Filter the data based on sidebar selections."""
+    """
+    Filter the data based on the user's sidebar selections.
+    This should be called BEFORE we compute earliest-latest changes,
+    so we only compare among the data that remains after filtering.
+    """
     if urban_rural:
         df = df[df["Urban/Rural"].isin(urban_rural)]
     if season:
