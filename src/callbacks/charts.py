@@ -1,5 +1,5 @@
 import altair as alt
-from dash import Input, Output, callback
+from dash import Input, Output, callback, ctx
 from constants.constants import GROUP_BY_SEVERITY, GROUP_BY_TIME
 from data.canadian_data import canadian_data
 from string_resources.en import (
