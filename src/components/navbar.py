@@ -57,7 +57,9 @@ about_text = html.Div(
             ]
         ),
         html.P(["Creator: Franklin Aryee, Michael Suriawan, Nhan Tien Nguyen"]),
-        html.P(["Last Deployment Date: March 1st 2025"]),
+        html.P(
+            [f"Last Deployment Date: {today_date}"]
+        ),
     ],
     id="about-text",
     style=about_text_style,
