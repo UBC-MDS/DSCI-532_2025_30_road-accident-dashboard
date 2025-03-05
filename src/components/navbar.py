@@ -1,3 +1,4 @@
+from datetime import datetime
 from dash import html
 import dash_bootstrap_components as dbc
 from constants.constants import PROJECT_GITHUB_LINK
