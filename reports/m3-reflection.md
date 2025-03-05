@@ -1,4 +1,4 @@
-# Milestone 2 Reflection
+# Milestone 3 Reflection
 
 We have significantly enhanced the dashboard by implementing several key features from our proposal and sketch. The following improvements have been made:
 
