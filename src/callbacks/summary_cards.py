@@ -42,78 +42,151 @@ def filter_data(
     return df
 
 
+def compute_pct_change_earliest_latest(df, col=None, agg="sum"):
+    """
+    Compare earliest date vs. latest in the (filtered) dataset.
+    """
+    if df.empty or "Year" not in df.columns:
+        return ("N/A", {})
 
-def get_category(input_category):
-    # python does not have switch-case SMH
-    if input_category == GROUP_BY_SEVERITY:
-        return CHART_GROUP_BY_SEVERITY_LABEL, "Accident Severity:N"
-    elif input_category == GROUP_BY_TIME:
-        return CHART_GROUP_BY_TIME_LABEL, "Time of Day:N"
+    # Group by Year only. If no month filter is applied, this includes all months.
+    if col is None:
+        grouped = df.groupby("Year").size().reset_index(name="Count")
+        col = "Count"
+    elif agg == "sum":
+        grouped = df.groupby("Year")[col].sum().reset_index()
+    elif agg == "mean":
+        grouped = df.groupby("Year")[col].mean().reset_index()
     else:
-        return None, None
+        return ("N/A", {})
+
+    grouped = grouped.sort_values("Year")
+    # print(grouped)
+
+    if len(grouped) < 2:
+        return ("N/A", {})
+
+    first_val = grouped[col].iloc[0]
+    last_val = grouped[col].iloc[-1]
+
+    if abs(first_val) < 1e-9:
+        return ("N/A", {})
+
+    pct_change = ((last_val - first_val) / abs(first_val)) * 100
+    if pct_change > 0:
+        return (f"+{pct_change:.1f}%", {"color": "red", "text-align": "center"})
+    else:
+        return (f"{pct_change:.1f}%", {"color": "green", "text-align": "center"})
 
 
-def generate_card_body(title, desc_value, color="black"):
-
-    card_body = dbc.CardBody(
+def generate_card_body(title, desc_value, subtitle=" ", subtitle_style=None):
+    return dbc.Card(
         [
-            html.P(title),
-            html.Br(),
-            html.H3(desc_value, style={"text-align": "center", "color": color}),
-        ]
+            dbc.CardHeader(
+                html.Div(title, style={"textAlign": "center"}),
+                className="card-header",
+            ),
+            dbc.CardBody(
+                [
+                    html.H5(desc_value, style={"text-align": "center", "font-weight": "bold"}),
+                    html.Div(subtitle, style=subtitle_style),
+                ],
+                style={"padding": "15px"}
+            ),
+        ],
+        className="card-shadow"
     )
 
-    return card_body
+
+def format_currency(value):
+    """
+    Format a number with appropriate currency suffix:
+    """
+    if value >= 1_000_000_000:  # Billion
+        return f"${value / 1_000_000_000:.1f}B"
+    elif value >= 1_000_000:  # Million
+        return f"${value / 1_000_000:.1f}M"
+    elif value >= 1_000:  # Thousand
+        return f"${value / 1_000:.1f}K"
+    else:
+        return f"${value:,.1f}"
 
 
 def get_card_total_accidents(df):
+    title = "Total Accidents"
 
     total_acc = len(df)
-    title = "Total Number of Accidents"
-    desc_value = f"{total_acc:,.0f}" if total_acc else ""
-    cardbody = generate_card_body(title=title, desc_value=desc_value)
+    desc_value = f"{total_acc:,.0f}"
 
-    return cardbody
+    change_text, change_style = compute_pct_change_earliest_latest(df, None)
+
+    return generate_card_body(
+        title, desc_value, subtitle=change_text, subtitle_style=change_style
+    )
 
 
 def get_card_total_fatalities(df):
-
-    total_fatalities = df["Number of Fatalities"].sum()
     title = "Total Fatalities"
-    desc_value = f"{total_fatalities:,.0f} deaths" if total_fatalities else ""
-    cardbody = generate_card_body(title=title, desc_value=desc_value)
+    total_fatalities = df["Number of Fatalities"].sum()
+    desc_value = f"{total_fatalities:,.0f}" if total_fatalities else 0
 
-    return cardbody
+    change_text, change_style = compute_pct_change_earliest_latest(
+        df, "Number of Fatalities", agg="sum"
+    )
+
+    return generate_card_body(
+        title, desc_value, subtitle=change_text, subtitle_style=change_style
+    )
 
 
 def get_card_avg_response_time(df):
+    title = "Average ERT"
+    avg_response_time = df["Emergency Response Time"].mean() if not df.empty else 0
+    desc_value = f"{avg_response_time:.1f} min"
 
-    avg_response_time = df["Emergency Response Time"].mean()
-    title = "Average Emergency Response Time"
-    desc_value = f"{avg_response_time.round(1):,.1f} minutes" if avg_response_time else ""
-    cardbody = generate_card_body(title=title, desc_value=desc_value)
+    change_text, change_style = compute_pct_change_earliest_latest(
+        df, "Emergency Response Time", agg="mean"
+    )
 
-    return cardbody
+    return generate_card_body(
+        title, desc_value, subtitle=change_text, subtitle_style=change_style
+    )
 
 
 def get_card_total_economic_loss(df):
+    """Total Economic Loss formatted with K, M, B suffixes."""
+    title = "Economic Loss"
+    total_eco_loss = df["Economic Loss"].sum() if not df.empty else 0
 
-    total_eco_loss = df["Economic Loss"].sum()
-    title = "Total Economic Loss"
-    desc_value = f"{total_eco_loss.round(1):,.0f} USD" if total_eco_loss else ""
-    cardbody = generate_card_body(title=title, desc_value=desc_value)
+    desc_value = format_currency(total_eco_loss)
 
-    return cardbody
+    change_text, change_style = compute_pct_change_earliest_latest(
+        df, "Economic Loss", agg="sum"
+    )
+
+    return generate_card_body(
+        title, desc_value, subtitle=change_text, subtitle_style=change_style
+    )
 
 
 def get_card_leading_cause(df):
+    cause_counts = df["Accident Cause"].value_counts()
+    if cause_counts.empty:
+        return generate_card_body("Leading Cause", "N/A")
 
-    leading_cause = df["Accident Cause"].mode()[0]
-    title = "Leading Cause of Accident"
-    desc_value = f"{leading_cause}" if leading_cause else ""
-    cardbody = generate_card_body(title=title, desc_value=desc_value)
+    top_cause = cause_counts.index[0]
+    # second_cause = cause_counts.index[1] if len(cause_counts) > 1 else None
 
-    return cardbody
+    title = "Leading Cause"
+    desc_value = top_cause
+    # subtitle = f"Next: {second_cause}" if second_cause else ""
+
+    return generate_card_body(
+        title,
+        desc_value,
+        # subtitle=subtitle,
+        # subtitle_style={"text-align": "center", "fontSize": "14px", "color": "green"},
+    )
 
 
 @callback(
