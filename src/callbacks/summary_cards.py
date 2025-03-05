@@ -202,7 +202,7 @@ def get_card_leading_cause(df):
     Input("road-condition", "value"),
     Input("time-of-day", "value"),
     Input("year-slider", "value"),
-    Input("month-checklist", "value")
+    Input("month-checklist", "value"),
 )
 def load_summary_cards(
     group_by_category,
