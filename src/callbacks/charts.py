@@ -259,17 +259,29 @@ def load_chart(
         year_range,
         months,
     )
-    emergency_response_time_chart = get_emergency_response_time_chart(
-        df, group_by_category
-    )
-    weather_chart = get_weather_chart(df, group_by_category)
-    age_chart = get_age_chart(df, group_by_category)
-    line_chart = get_line_chart(df, group_by_category)
-    road_chart = get_road_chart(df, group_by_category)
-    return (
-        emergency_response_time_chart.to_dict(format="vega"),
-        weather_chart.to_dict(format="vega"),
-        age_chart.to_dict(format="vega"),
-        line_chart.to_dict(format="vega"),
-        road_chart.to_dict(format="vega"),
-    )
+
+    def chart_to_dict(df):
+        return (
+            get_emergency_response_time_chart(df, group_by_category).to_dict(
+                format="vega"
+            ),
+            get_weather_chart(df, group_by_category).to_dict(format="vega"),
+            get_age_chart(df, group_by_category).to_dict(format="vega"),
+            get_line_chart(df, group_by_category).to_dict(format="vega"),
+            get_road_chart(df, group_by_category).to_dict(format="vega"),
+        )
+
+    charts = chart_to_dict(df)
+
+    filters = [
+        urban_rural,
+        season,
+        weather_condition,
+        road_condition,
+        time_of_day,
+        year_range,
+        months,
+        group_by_category,
+    ]
+
+    return (*charts, *filters)
