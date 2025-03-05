@@ -232,7 +232,22 @@ def load_chart(
     time_of_day,
     year_range,
     months,
+    reset_clicks,
 ):
+    min_year, max_year = canadian_data.Year.min(), canadian_data.Year.max()
+
+    # Check if Reset Button was clicked
+    if ctx.triggered_id == "reset-button":
+        # print("Reset triggered!")
+        urban_rural = []
+        season = []
+        weather_condition = []
+        road_condition = []
+        time_of_day = []
+        year_range = [min_year, max_year]
+        months = []
+        group_by_category = GROUP_BY_SEVERITY
+
     raw_df = get_data()
     df = filter_data(
         raw_df,
