@@ -70,11 +70,12 @@ def get_emergency_response_time_chart(df, input_category):
                 sort=alt.EncodingSortField(
                     field="Emergency Response Time", op="median", order="descending"
                 ),
-                axis=alt.Axis(labelAngle=-360)
+                axis=alt.Axis(labelAngle=-360, titlePadding=10)
             ),
             y=alt.Y(
                 "Emergency Response Time:Q",
                 title=CHART_EMERGENCY_RESPONSE_TIME_Y_AXIS_LABEL,
+                axis=alt.Axis(labelAngle=-360, titlePadding=10)
             ),
             color=alt.Color(category_numeric, legend=None),
             tooltip=[
@@ -93,9 +94,9 @@ def get_weather_chart(df, input_category):
         alt.Chart(df)
         .mark_bar()
         .encode(
-            x=alt.X("Weather Conditions", sort="-y", axis=alt.Axis(labelAngle=-360)),
+            x=alt.X("Weather Conditions", sort="-y",  axis=alt.Axis(labelAngle=-360, titlePadding=10)),
             y=alt.Y(
-                "count():Q", axis=alt.Axis(title=CHART_ACCIDENT_COUNT_Y_AXIS_LABEL)
+                "count():Q", axis=alt.Axis(title=CHART_ACCIDENT_COUNT_Y_AXIS_LABEL,  labelAngle=-360, titlePadding=10)
             ),
             color=alt.Color(
                 category_numeric,
@@ -108,7 +109,7 @@ def get_weather_chart(df, input_category):
             ),
             tooltip=["Weather Conditions", "count():Q", category_numeric],
         )
-        .properties(width=330, height=217)
+        .properties(width=320, height=217)
     )
     return chart
 
@@ -120,7 +121,7 @@ def get_age_chart(df, input_category):
         .mark_bar()
         .encode(
             x=alt.X(
-                "count():Q", axis=alt.Axis(title=CHART_ACCIDENT_COUNT_Y_AXIS_LABEL)
+                "count():Q", axis=alt.Axis(title=CHART_ACCIDENT_COUNT_Y_AXIS_LABEL, labelAngle=-360, titlePadding=10)
             ),
             y=alt.Y("Driver Age Group", sort=["61+", "41-60", "26-40", "18-25", "<18"]),
             color=alt.Color(
@@ -149,8 +150,8 @@ def get_line_chart(df, input_category):
         alt.Chart(accident_counts)
         .mark_line()
         .encode(
-            x=alt.X("Year:O", axis=alt.Axis(labelAngle=-360)),
-            y=alt.Y("Accident Count:Q").scale(zero=False),
+            x=alt.X("Year:O", axis=alt.Axis(labelAngle=-360,  titlePadding=10)),
+            y=alt.Y("Accident Count:Q",  axis=alt.Axis(titlePadding=10)).scale(zero=False),
             color=alt.Color(
                 category_numeric,
                 legend=alt.Legend(
@@ -185,7 +186,7 @@ def get_road_chart(df, input_category):
         alt.Chart(df)
         .mark_bar()
         .encode(
-            x=alt.X("Road Condition", sort="-y", axis=alt.Axis(labelAngle=-360)),
+            x=alt.X("Road Condition", sort="-y", axis=alt.Axis(labelAngle=-360,  titlePadding=10)),
             y=alt.Y(
                 "count():Q", axis=alt.Axis(title=CHART_ACCIDENT_COUNT_Y_AXIS_LABEL)
             ),
