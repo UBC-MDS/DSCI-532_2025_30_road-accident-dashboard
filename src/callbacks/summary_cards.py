@@ -80,10 +80,11 @@ def compute_pct_change_earliest_latest(df, col=None, agg="sum"):
 
 
 def generate_card_body(title, desc_value, subtitle=" ", subtitle_style=None):
+    s1, s2 = title.split(" ") # assuming that the title is only 2 words e.g "Total Accidents"
     return dbc.Card(
         [
             dbc.CardHeader(
-                html.Div(title, style={"textAlign": "center"}),
+                html.Div([s1, html.Br(), s2], style={"textAlign": "center"}),
                 className="card-header",
             ),
             dbc.CardBody(
