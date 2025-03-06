@@ -50,15 +50,15 @@ def filter_data(
 def get_category(input_category):
     # python does not have switch-case SMH
     if input_category == GROUP_BY_SEVERITY:
-        return CHART_GROUP_BY_SEVERITY_LABEL, "Accident Severity:N"
+        return CHART_GROUP_BY_SEVERITY_LABEL, "Accident Severity:N", ["Minor", "Moderate", "Severe"]
     elif input_category == GROUP_BY_TIME:
-        return CHART_GROUP_BY_TIME_LABEL, "Time of Day:N"
+        return CHART_GROUP_BY_TIME_LABEL, "Time of Day:N", ["Morning", "Afternoon", "Evening", "Night"]
     else:
         return None, None
 
 
 def get_emergency_response_time_chart(df, input_category):
-    category_label, category_numeric = get_category(input_category)
+    category_label, category_numeric, category_order = get_category(input_category)
     df['Emergency Response Time'] = df['Emergency Response Time'].round(2)
     chart = (
         alt.Chart(df)
@@ -67,9 +67,7 @@ def get_emergency_response_time_chart(df, input_category):
             x=alt.X(
                 category_numeric,
                 title=category_label,
-                sort=alt.EncodingSortField(
-                    field="Emergency Response Time", op="median", order="descending"
-                ),
+                sort=category_order,
                 axis=alt.Axis(labelAngle=-360, titlePadding=10)
             ),
             y=alt.Y(
@@ -89,7 +87,7 @@ def get_emergency_response_time_chart(df, input_category):
 
 
 def get_weather_chart(df, input_category):
-    _, category_numeric = get_category(input_category)
+    _, category_numeric, _ = get_category(input_category)
     chart = (
         alt.Chart(df)
         .mark_bar()
@@ -115,7 +113,7 @@ def get_weather_chart(df, input_category):
 
 
 def get_age_chart(df, input_category):
-    _, category_numeric = get_category(input_category)
+    _, category_numeric, _ = get_category(input_category)
     chart = (
         alt.Chart(df)
         .mark_bar()
@@ -141,10 +139,13 @@ def get_age_chart(df, input_category):
 
 
 def get_line_chart(df, input_category):
-    category_label, category_numeric = get_category(input_category)
+    category_label, category_numeric, category_order = get_category(input_category)
     accident_counts = (
         df.groupby(["Year", category_label]).size().reset_index(name="Accident Count")
     )
+
+    filtered_values = df[category_label].unique().tolist()
+    dynamic_order = [value for value in category_order if value in filtered_values]
 
     line = (
         alt.Chart(accident_counts)
@@ -160,6 +161,7 @@ def get_line_chart(df, input_category):
                     direction="horizontal",
                     titleAnchor="middle",
                 ),
+                scale=alt.Scale(domain=dynamic_order)
             ),
         )
     )
@@ -181,7 +183,7 @@ def get_line_chart(df, input_category):
 
 
 def get_road_chart(df, input_category):
-    _, category_numeric = get_category(input_category)
+    _, category_numeric, _ = get_category(input_category)
     chart = (
         alt.Chart(df)
         .mark_bar()
