@@ -30,12 +30,13 @@
   text-align: center;
   padding: 15px;
   margin: 2px;
-  border: 1px solid #ced4da;
+  /* border: 1px solid #dc3545; */
   border-radius: 5px;
   cursor: pointer;
-  background-color: #f8f9fa;
+  background-color:  #dc3545;
   transition: background-color 0.2s ease, color 0.2s ease,
     border-color 0.2s ease;
+    color: white;
 }
 
 .month-checklist label input[type="checkbox"] {
@@ -47,7 +48,17 @@
 .month-checklist label:has(input:checked) {
   background-color: #dc3545;
   color: white;
+}
+
+.month-checklist:has(input:checked) label:not(:has(input:checked)) {
+  background-color: white;
+  color: black;
   border-color: #dc3545;
+}
+
+.month-checklist label:hover {
+  background-color: white;
+  color: black;
 }
 
 .rc-slider-handle {
@@ -79,22 +90,21 @@
 }
 
 .card-shadow {
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 8px rgba(128, 128, 128, 0.2);
   border-radius: 5px;
   margin: 10px;
 }
 
 .reset-button {
-  background-color: #dc3545; /* Red */
-  color: white;
+  background-color: white;
+  color: black;
   width: 100%;
-  font-size: 16px;
   padding: 10px;
   border: none;
-  transition: background-color 0.3s ease-in-out; /* Smooth effect */
 }
 
 .reset-button:hover {
-  background-color: #007bff !important; /* Blue on hover */
+  background-color: #1e3a8a;;
   color: white;
+  border: none;
 }
