@@ -4,3 +4,5 @@ PROJECT_GITHUB_LINK = (
 
 GROUP_BY_SEVERITY = "severity"
 GROUP_BY_TIME = "time"
+GROUP_BY_SETTLEMENT_TYPE = "Settlement Type"
+GROUP_BY_SEASON = "Season"

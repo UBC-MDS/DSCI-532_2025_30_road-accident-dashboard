@@ -1,11 +1,13 @@
 import dash_bootstrap_components as dbc
 from dash import html, dcc
-from constants.constants import GROUP_BY_SEVERITY, GROUP_BY_TIME
+from constants.constants import GROUP_BY_SEVERITY, GROUP_BY_TIME, GROUP_BY_SETTLEMENT_TYPE, GROUP_BY_SEASON
 from string_resources.en import (
     SIDEBAR_TITLE,
     SIDEBAR_GROUP_BY_LABEL,
     SIDEBAR_GROUP_BY_OPTION_SEVERITY,
     SIDEBAR_GROUP_BY_OPTION_TIME,
+    SIDEBAR_GROUP_BY_SETTLEMENT_TYPE,
+    SIDEBAR_GROUP_BY_SEASON
 )
 
 from data.canadian_data import canadian_data
@@ -47,10 +49,12 @@ group_by_radio = dcc.RadioItems(
     options=[
         {"label": SIDEBAR_GROUP_BY_OPTION_SEVERITY, "value": GROUP_BY_SEVERITY},
         {"label": SIDEBAR_GROUP_BY_OPTION_TIME, "value": GROUP_BY_TIME},
+        {"label": SIDEBAR_GROUP_BY_SETTLEMENT_TYPE, "value": GROUP_BY_SETTLEMENT_TYPE},
+        {"label": SIDEBAR_GROUP_BY_SEASON, "value": GROUP_BY_SEASON},
     ],
     value=GROUP_BY_SEVERITY,  # default is by severity
     id="group_by_radio",
-    inline=True,
+    inline=False,
     className="custom-radio-items",
 )
 sidebar = dbc.Col(
@@ -63,7 +67,7 @@ sidebar = dbc.Col(
         html.Label("Settlement Type"),
         dcc.Dropdown(
             id="urban-rural",
-            options=[{"label": r, "value": r} for r in get_unique("Urban/Rural")],
+            options=[{"label": r, "value": r} for r in get_unique("Settlement Type")],
             multi=True,
             placeholder="Select one or more...",
         ),
