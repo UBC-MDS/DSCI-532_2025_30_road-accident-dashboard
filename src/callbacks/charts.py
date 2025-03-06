@@ -60,7 +60,7 @@ def get_category(input_category):
     elif input_category == GROUP_BY_SEASON:
         return CHART_GROUP_BY_SEASON, "Season", ["Spring", "Summer", "Autumn", "Winter"]
     else:
-        return None, None
+        return None, None, None
 
 
 def get_emergency_response_time_chart(df, input_category):
@@ -92,10 +92,12 @@ def get_emergency_response_time_chart(df, input_category):
     return chart
 
 
-def get_weather_chart(df, input_category):
+def get_weather_chart(df, input_category, count_type):
     category_label, category_numeric, category_order= get_category(input_category)
     filtered_values = df[category_label].unique().tolist()
     dynamic_order = [value for value in category_order if value in filtered_values]
+    stacked_type = "normalize" if count_type == 'Normalized' else 'zero'
+    count_axis_title = f"{count_type} "+CHART_ACCIDENT_COUNT_Y_AXIS_LABEL
 
     chart = (
         alt.Chart(df)
@@ -103,7 +105,9 @@ def get_weather_chart(df, input_category):
         .encode(
             x=alt.X("Weather Conditions", sort="-y",  axis=alt.Axis(labelAngle=-360, titlePadding=10)),
             y=alt.Y(
-                "count():Q", axis=alt.Axis(title=CHART_ACCIDENT_COUNT_Y_AXIS_LABEL,  labelAngle=-360, titlePadding=10)
+                "count():Q", 
+                axis=alt.Axis(title=count_axis_title,  labelAngle=-360, titlePadding=10),
+                stack=stacked_type
             ),
             color=alt.Color(
                 category_numeric,
@@ -122,17 +126,21 @@ def get_weather_chart(df, input_category):
     return chart
 
 
-def get_age_chart(df, input_category):
+def get_age_chart(df, input_category, count_type):
     category_label, category_numeric, category_order= get_category(input_category)
     filtered_values = df[category_label].unique().tolist()
     dynamic_order = [value for value in category_order if value in filtered_values]
+    stacked_type = "normalize" if count_type == 'Normalized' else 'zero'
+    count_axis_title = f"{count_type} "+CHART_ACCIDENT_COUNT_Y_AXIS_LABEL
 
     chart = (
         alt.Chart(df)
         .mark_bar()
         .encode(
             x=alt.X(
-                "count():Q", axis=alt.Axis(title=CHART_ACCIDENT_COUNT_Y_AXIS_LABEL, labelAngle=-360, titlePadding=10)
+                "count():Q", 
+                axis=alt.Axis(title=count_axis_title, labelAngle=-360, titlePadding=10),
+                stack=stacked_type
             ),
             y=alt.Y("Driver Age Group", sort=["61+", "41-60", "26-40", "18-25", "<18"]),
             color=alt.Color(
@@ -196,18 +204,21 @@ def get_line_chart(df, input_category):
     return chart
 
 
-def get_road_chart(df, input_category):
+def get_road_chart(df, input_category, count_type):
     category_label, category_numeric, category_order= get_category(input_category)
     filtered_values = df[category_label].unique().tolist()
     dynamic_order = [value for value in category_order if value in filtered_values]
-
+    stacked_type = "normalize" if count_type == 'Normalized' else 'zero'
+    count_axis_title = f"{count_type} "+CHART_ACCIDENT_COUNT_Y_AXIS_LABEL
     chart = (
         alt.Chart(df)
         .mark_bar()
         .encode(
             x=alt.X("Road Condition", sort="-y", axis=alt.Axis(labelAngle=-360,  titlePadding=10)),
             y=alt.Y(
-                "count():Q", axis=alt.Axis(title=CHART_ACCIDENT_COUNT_Y_AXIS_LABEL)
+                "count():Q", 
+                axis=alt.Axis(title=count_axis_title),
+                stack=stacked_type
             ),
             color=alt.Color(
                 category_numeric,
@@ -240,7 +251,9 @@ def get_road_chart(df, input_category):
     Output("year-slider", "value"),
     Output("month-checklist", "value"),
     Output("group_by_radio", "value"),
+    Output("count_type_radio", "value"),
     Input("group_by_radio", "value"),
+    Input("count_type_radio", "value"),
     Input("urban-rural", "value"),
     Input("season", "value"),
     Input("weather-condition", "value"),
@@ -252,6 +265,7 @@ def get_road_chart(df, input_category):
 )
 def load_chart(
     group_by_category,
+    count_type,
     urban_rural,
     season,
     weather_condition,
@@ -274,6 +288,7 @@ def load_chart(
         year_range = [min_year, max_year]
         months = []
         group_by_category = GROUP_BY_SEVERITY
+        count_type = "Raw"
 
     raw_df = get_data()
     df = filter_data(
@@ -292,10 +307,10 @@ def load_chart(
             get_emergency_response_time_chart(df, group_by_category).to_dict(
                 format="vega"
             ),
-            get_weather_chart(df, group_by_category).to_dict(format="vega"),
-            get_age_chart(df, group_by_category).to_dict(format="vega"),
+            get_weather_chart(df, group_by_category, count_type).to_dict(format="vega"),
+            get_age_chart(df, group_by_category, count_type).to_dict(format="vega"),
             get_line_chart(df, group_by_category).to_dict(format="vega"),
-            get_road_chart(df, group_by_category).to_dict(format="vega"),
+            get_road_chart(df, group_by_category, count_type).to_dict(format="vega"),
         )
 
     charts = chart_to_dict(df)
@@ -309,6 +324,7 @@ def load_chart(
         year_range,
         months,
         group_by_category,
+        count_type,
     ]
 
     return (*charts, *filters)
