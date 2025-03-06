@@ -25,21 +25,20 @@ We included a dynamically updated “Last Deployment Date” in the About sectio
 
 This was implemeted in Milestone 2.
 
-## Corner Cases
+## Corner Case
 
 - Deselecting all months is not possible on the dashboard because it would result in an empty dataset, even when a year range is selected. To prevent this, the default behavior ensures that if all months are deselected, the dashboard automatically reverts to selecting all months. This maintains data visibility and prevents unexpected empty views.
-
 
 ## Inspiration (Challenging)
 
 - **Summary Cards Layout (Inspired by Group 16)**
-We adopted Group 16’s structured approach to summary cards, where they organized content into header, body, and footer. This helped improve the visual clarity and readability of key accident statistics. However, we chose to omit the footer, as it was not necessary for our data presentation.
+  We adopted Group 16’s structured approach to summary cards, where they organized content into header, body, and footer. This helped improve the visual clarity and readability of key accident statistics. However, we chose to omit the footer, as it was not necessary for our data presentation.
 
 - **Reset Filter Functionality (Inspired by Group 18)**
-We implemented a reset filter button based on the approach taken by Group 18. While their implementation had issues, we refined the logic to ensure our reset functionality worked correctly and efficiently, resetting all filters to their default states.
+  We implemented a reset filter button based on the approach taken by Group 18. While their implementation had issues, we refined the logic to ensure our reset functionality worked correctly and efficiently, resetting all filters to their default states.
 
 - **Chart Loading Animation (Inspired by Group 17)**
-For a more polished user experience, we implemented a loading animation for the chart area, inspired by Group 17. We specifically used a red cube loading animation, which aligns well with our dashboard’s theme and provides clear feedback to users while data is being processed.
+  For a more polished user experience, we implemented a loading animation for the chart area, inspired by Group 17. We specifically used a red cube loading animation, which aligns well with our dashboard’s theme and provides clear feedback to users while data is being processed.
 
 ## Future Improvements
 
