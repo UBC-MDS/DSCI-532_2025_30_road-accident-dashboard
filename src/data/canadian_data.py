@@ -69,3 +69,5 @@ canadian_data["Season"] = canadian_data["Month"].map(season_dict)
 
 # Create shortnames for Months
 canadian_data["MonthX"] = canadian_data["Month"].str[:3]
+
+canadian_data = canadian_data.rename(columns={"Urban/Rural": "Settlement Type"})

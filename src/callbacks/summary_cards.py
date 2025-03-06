@@ -26,7 +26,7 @@ def filter_data(
     so we only compare among the data that remains after filtering.
     """
     if urban_rural:
-        df = df[df["Urban/Rural"].isin(urban_rural)]
+        df = df[df["Settlement Type"].isin(urban_rural)]
     if season:
         df = df[df["Season"].isin(season)]
     if weather_condition:

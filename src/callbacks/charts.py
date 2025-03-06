@@ -1,12 +1,14 @@
 import altair as alt
 from dash import Input, Output, callback, ctx
-from constants.constants import GROUP_BY_SEVERITY, GROUP_BY_TIME
+from constants.constants import GROUP_BY_SEVERITY, GROUP_BY_TIME, GROUP_BY_SETTLEMENT_TYPE, GROUP_BY_SEASON
 from data.canadian_data import canadian_data
 from string_resources.en import (
     CHART_GROUP_BY_SEVERITY_LABEL,
     CHART_GROUP_BY_TIME_LABEL,
     CHART_EMERGENCY_RESPONSE_TIME_Y_AXIS_LABEL,
     CHART_ACCIDENT_COUNT_Y_AXIS_LABEL,
+    CHART_GROUP_BY_SETTLEMENT_TYPE,
+    CHART_GROUP_BY_SEASON
 )
 import functools
 
@@ -31,7 +33,7 @@ def filter_data(
 ):
     """Filter the data based on sidebar selections."""
     if urban_rural:
-        df = df[df["Urban/Rural"].isin(urban_rural)]
+        df = df[df["Settlement Type"].isin(urban_rural)]
     if season:
         df = df[df["Season"].isin(season)]
     if weather_condition:
@@ -53,6 +55,10 @@ def get_category(input_category):
         return CHART_GROUP_BY_SEVERITY_LABEL, "Accident Severity:N", ["Minor", "Moderate", "Severe"]
     elif input_category == GROUP_BY_TIME:
         return CHART_GROUP_BY_TIME_LABEL, "Time of Day:N", ["Morning", "Afternoon", "Evening", "Night"]
+    elif input_category == GROUP_BY_SETTLEMENT_TYPE:
+        return CHART_GROUP_BY_SETTLEMENT_TYPE, "Settlement Type", ["Urban", "Rural"]
+    elif input_category == GROUP_BY_SEASON:
+        return CHART_GROUP_BY_SEASON, "Season", ["Spring", "Summer", "Autumn", "Winter"]
     else:
         return None, None
 
@@ -87,7 +93,10 @@ def get_emergency_response_time_chart(df, input_category):
 
 
 def get_weather_chart(df, input_category):
-    _, category_numeric, _ = get_category(input_category)
+    category_label, category_numeric, category_order= get_category(input_category)
+    filtered_values = df[category_label].unique().tolist()
+    dynamic_order = [value for value in category_order if value in filtered_values]
+    
     chart = (
         alt.Chart(df)
         .mark_bar()
@@ -104,6 +113,7 @@ def get_weather_chart(df, input_category):
                     direction="horizontal",
                     titleAnchor="middle",
                 ),
+                scale=alt.Scale(domain=dynamic_order)
             ),
             tooltip=["Weather Conditions", "count():Q", category_numeric],
         )
@@ -113,7 +123,10 @@ def get_weather_chart(df, input_category):
 
 
 def get_age_chart(df, input_category):
-    _, category_numeric, _ = get_category(input_category)
+    category_label, category_numeric, category_order= get_category(input_category)
+    filtered_values = df[category_label].unique().tolist()
+    dynamic_order = [value for value in category_order if value in filtered_values]
+
     chart = (
         alt.Chart(df)
         .mark_bar()
@@ -130,6 +143,7 @@ def get_age_chart(df, input_category):
                     direction="horizontal",
                     titleAnchor="middle",
                 ),
+                scale=alt.Scale(domain=dynamic_order)
             ),
             tooltip=["count():Q", "Driver Age Group", category_numeric],
         )
@@ -183,7 +197,10 @@ def get_line_chart(df, input_category):
 
 
 def get_road_chart(df, input_category):
-    _, category_numeric, _ = get_category(input_category)
+    category_label, category_numeric, category_order= get_category(input_category)
+    filtered_values = df[category_label].unique().tolist()
+    dynamic_order = [value for value in category_order if value in filtered_values]
+
     chart = (
         alt.Chart(df)
         .mark_bar()
@@ -200,6 +217,7 @@ def get_road_chart(df, input_category):
                     direction="horizontal",
                     titleAnchor="middle",
                 ),
+                scale=alt.Scale(domain=dynamic_order)
             ),
             tooltip=["Road Condition", "count():Q", category_numeric],
         )
