@@ -80,7 +80,9 @@ def compute_pct_change_earliest_latest(df, col=None, agg="sum"):
 
 
 def generate_card_body(title, desc_value, subtitle=" ", subtitle_style=None):
-    s1, s2 = title.split(" ") # assuming that the title is only 2 words e.g "Total Accidents"
+    s1, s2 = title.split(
+        " "
+    )  # assuming that the title is only 2 words e.g "Total Accidents"
     return dbc.Card(
         [
             dbc.CardHeader(
@@ -89,13 +91,16 @@ def generate_card_body(title, desc_value, subtitle=" ", subtitle_style=None):
             ),
             dbc.CardBody(
                 [
-                    html.H5(desc_value, style={"text-align": "center", "font-weight": "bold"}),
+                    html.H5(
+                        desc_value,
+                        style={"text-align": "center", "font-weight": "bold"},
+                    ),
                     html.Div(subtitle, style=subtitle_style),
                 ],
-                style={"padding": "15px"}
+                style={"padding": "15px"},
             ),
         ],
-        className="card-shadow"
+        className="card-shadow",
     )
 
 
@@ -179,7 +184,11 @@ def get_card_leading_cause(df):
     # second_cause = cause_counts.index[1] if len(cause_counts) > 1 else None
 
     title = "Leading Cause"
-    desc_value = top_cause
+    # If it's a single word, add a line break
+    if len(top_cause.split()) == 1:
+        desc_value = html.Span([top_cause, html.Br(), html.Br()])
+    else:
+        desc_value = top_cause  # Keep it as a normal string
     # subtitle = f"Next: {second_cause}" if second_cause else ""
 
     return generate_card_body(
