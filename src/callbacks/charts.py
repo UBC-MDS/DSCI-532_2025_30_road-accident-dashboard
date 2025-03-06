@@ -87,7 +87,7 @@ def get_emergency_response_time_chart(df, input_category):
                 alt.Tooltip('Emergency Response Time:Q')
             ]
         )
-    ).properties(width=340, height=250)
+    ).properties(width=330, height=250)
 
     return chart
 
@@ -96,7 +96,7 @@ def get_weather_chart(df, input_category):
     category_label, category_numeric, category_order= get_category(input_category)
     filtered_values = df[category_label].unique().tolist()
     dynamic_order = [value for value in category_order if value in filtered_values]
-    
+
     chart = (
         alt.Chart(df)
         .mark_bar()
@@ -117,7 +117,7 @@ def get_weather_chart(df, input_category):
             ),
             tooltip=["Weather Conditions", "count():Q", category_numeric],
         )
-        .properties(width=320, height=217)
+        .properties(width=300, height=217)
     )
     return chart
 
@@ -147,7 +147,7 @@ def get_age_chart(df, input_category):
             ),
             tooltip=["count():Q", "Driver Age Group", category_numeric],
         )
-        .properties(width=350, height=238)
+        .properties(width=340, height=205)
     )
     return chart
 
@@ -221,7 +221,7 @@ def get_road_chart(df, input_category):
             ),
             tooltip=["Road Condition", "count():Q", category_numeric],
         )
-        .properties(width=350, height=184)
+        .properties(width=300, height=217)
     )
     return chart
 
