@@ -57,12 +57,28 @@ group_by_radio = dcc.RadioItems(
     inline=False,
     className="custom-radio-items",
 )
+
+count_type_radio = dcc.RadioItems(
+    options=[
+        {"label": "Raw count", "value": "Raw"},
+        {"label": "Normalized count", "value": "Normalized"}
+    ],
+    value="Raw",
+    id="count_type_radio",
+    inline=False,
+    className="custom-radio-items"
+)
+
 sidebar = dbc.Col(
     [
         html.H4(SIDEBAR_TITLE),
         html.Br(),
         html.H6(SIDEBAR_GROUP_BY_LABEL),
         group_by_radio,
+        html.Br(),
+        html.H6("Count type"),
+        html.I("Notes: For Total Accidents by Age/Weather/Road Conditions charts only!", style={"font-size": "12px"}),
+        count_type_radio,
         html.Br(),
         html.Label("Settlement Type"),
         dcc.Dropdown(
