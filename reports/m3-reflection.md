@@ -8,12 +8,12 @@ We refined the summary cards to align properly with the sidebar and charts, ensu
 
 As part of the summary card enhancements, we also implemented a robust logic for computing percentage changes between the earliest and latest years. The percentage change follows these improved rules:
 
-- If a range of years is selected, the calculation compares the earliest and latest year in the selection, aggregating data across all months within those years to ensure a comprehensive comparison.
+- If a range of years is selected, the calculation compares the earliest and latest year in the selection, aggregating data across all months for only those two years.
 - If only one year is selected, the percentage change returns “N/A”, as there is no other year available for comparison.
 - If specific months are selected within a year range, the data is aggregated only for those months within the earliest and latest years. This ensures that comparisons are made within the same timeframe across years.
 - If, after aggregation, there is no data available for either the earliest or latest year, the percentage change also returns “N/A” to indicate missing data.
 
-2. **Sidebar Enhancements**
+1. **Sidebar Enhancements**
 
 We added a reset button that resets all filters to default values. This ensures that users can easily revert their selections without refreshing the page.
 
@@ -25,16 +25,20 @@ We included a dynamically updated “Last Deployment Date” in the About sectio
 
 This was implemeted in Milestone 2.
 
+## Corner Case
+
+- Deselecting all months is not possible on the dashboard because it would result in an empty dataset, even when a year range is selected. To prevent this, the default behavior ensures that if all months are deselected, the dashboard automatically reverts to selecting all months. This maintains data visibility and prevents unexpected empty views.
+
 ## Inspiration (Challenging)
 
 - **Summary Cards Layout (Inspired by Group 16)**
-We adopted Group 16’s structured approach to summary cards, where they organized content into header, body, and footer. This helped improve the visual clarity and readability of key accident statistics. However, we chose to omit the footer, as it was not necessary for our data presentation.
+  We adopted Group 16’s structured approach to summary cards, where they organized content into header, body, and footer. This helped improve the visual clarity and readability of key accident statistics. However, we chose to omit the footer, as it was not necessary for our data presentation.
 
 - **Reset Filter Functionality (Inspired by Group 18)**
-We implemented a reset filter button based on the approach taken by Group 18. While their implementation had issues, we refined the logic to ensure our reset functionality worked correctly and efficiently, resetting all filters to their default states.
+  We implemented a reset filter button based on the approach taken by Group 18. While their implementation had issues, we refined the logic to ensure our reset functionality worked correctly and efficiently, resetting all filters to their default states.
 
 - **Chart Loading Animation (Inspired by Group 17)**
-For a more polished user experience, we implemented a loading animation for the chart area, inspired by Group 17. We specifically used a red cube loading animation, which aligns well with our dashboard’s theme and provides clear feedback to users while data is being processed.
+  For a more polished user experience, we implemented a loading animation for the chart area, inspired by Group 17. We specifically used a red cube loading animation, which aligns well with our dashboard’s theme and provides clear feedback to users while data is being processed.
 
 ## Future Improvements
 
