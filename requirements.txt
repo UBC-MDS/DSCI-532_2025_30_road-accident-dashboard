@@ -4,6 +4,7 @@ dash-bootstrap-components==1.7.1
 dash-vega-components==0.11.0
 gunicorn==23.0.0
 pandas==2.2.3
+pyarrow==19.0.1
 vegafusion==1.6.9
 vegafusion-python-embed==1.6.9
 vl-convert-python==1.7.0
