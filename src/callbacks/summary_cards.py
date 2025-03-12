@@ -4,12 +4,6 @@ from data.canadian_data import canadian_data
 import functools
 
 
-@functools.lru_cache()
-def get_data():
-    """Load the dataset once (cached)."""
-    return canadian_data
-
-
 def filter_data(
     df,
     urban_rural,
@@ -199,34 +193,16 @@ def get_card_leading_cause(df):
     )
 
 
-@callback(
-    Output("card-total-acc", "children"),
-    Output("card-total-fatal", "children"),
-    Output("card-avg-resp", "children"),
-    Output("card-total-eco-loss", "children"),
-    Output("card-leading-cause", "children"),
-    Input("group_by_radio", "value"),
-    Input("urban-rural", "value"),
-    Input("season", "value"),
-    Input("weather-condition", "value"),
-    Input("road-condition", "value"),
-    Input("time-of-day", "value"),
-    Input("year-slider", "value"),
-    Input("month-checklist", "value"),
-)
-def load_summary_cards(
-    group_by_category,
-    urban_rural,
-    season,
-    weather_condition,
-    road_condition,
-    time_of_day,
-    year_range,
-    months,
-):
-    raw_df = get_data()
-    df = filter_data(
-        raw_df,
+def register_callbacks(app, cache):
+    """Registers callbacks and caches dataset."""
+
+    @cache.memoize()
+    def get_cached_data():
+        """Load and cache the dataset."""
+        return canadian_data
+
+    @cache.memoize()
+    def compute_summary_stats(
         urban_rural,
         season,
         weather_condition,
@@ -234,19 +210,129 @@ def load_summary_cards(
         time_of_day,
         year_range,
         months,
-    )
+    ):
+        """Cached function to compute summary statistics."""
+        raw_df = get_cached_data()
 
-    # Build each card
-    card_total_accidents = get_card_total_accidents(df)
-    card_total_fatalities = get_card_total_fatalities(df)
-    card_avg_response_time = get_card_avg_response_time(df)
-    card_total_economic_loss = get_card_total_economic_loss(df)
-    card_leading_cause = get_card_leading_cause(df)
+        # Convert mutable lists to tuples for cache stability
+        urban_rural = tuple(urban_rural or [])
+        season = tuple(season or [])
+        weather_condition = tuple(weather_condition or [])
+        road_condition = tuple(road_condition or [])
+        time_of_day = tuple(time_of_day or [])
+        year_range = tuple(year_range)
+        months = tuple(months or [])
 
-    return (
-        card_total_accidents,
-        card_total_fatalities,
-        card_avg_response_time,
-        card_total_economic_loss,
-        card_leading_cause,
+        df = filter_data(
+            raw_df,
+            urban_rural,
+            season,
+            weather_condition,
+            road_condition,
+            time_of_day,
+            year_range,
+            months,
+        )
+
+        total_accidents = len(df)
+        total_fatalities = (
+            df["Number of Fatalities"].sum() if "Number of Fatalities" in df else 0
+        )
+        avg_response_time = (
+            df["Emergency Response Time"].mean()
+            if "Emergency Response Time" in df
+            else 0
+        )
+        total_economic_loss = df["Economic Loss"].sum() if "Economic Loss" in df else 0
+
+        change_accidents = compute_pct_change_earliest_latest(df, None)
+        change_fatalities = compute_pct_change_earliest_latest(
+            df, "Number of Fatalities", agg="sum"
+        )
+        change_response_time = compute_pct_change_earliest_latest(
+            df, "Emergency Response Time", agg="mean"
+        )
+        change_economic_loss = compute_pct_change_earliest_latest(
+            df, "Economic Loss", agg="sum"
+        )
+
+        leading_cause = (
+            df["Accident Cause"].value_counts().idxmax()
+            if not df["Accident Cause"].empty
+            else "N/A"
+        )
+
+        return {
+            "total_accidents": total_accidents,
+            "total_fatalities": total_fatalities,
+            "avg_response_time": avg_response_time,
+            "total_economic_loss": total_economic_loss,
+            "change_accidents": change_accidents,
+            "change_fatalities": change_fatalities,
+            "change_response_time": change_response_time,
+            "change_economic_loss": change_economic_loss,
+            "leading_cause": leading_cause,
+        }
+
+    @callback(
+        Output("card-total-acc", "children"),
+        Output("card-total-fatal", "children"),
+        Output("card-avg-resp", "children"),
+        Output("card-total-eco-loss", "children"),
+        Output("card-leading-cause", "children"),
+        Input("urban-rural", "value"),
+        Input("season", "value"),
+        Input("weather-condition", "value"),
+        Input("road-condition", "value"),
+        Input("time-of-day", "value"),
+        Input("year-slider", "value"),
+        Input("month-checklist", "value"),
     )
+    def load_summary_cards(
+        urban_rural,
+        season,
+        weather_condition,
+        road_condition,
+        time_of_day,
+        year_range,
+        months,
+    ):
+        """Load and update summary cards."""
+
+        stats = compute_summary_stats(
+            urban_rural,
+            season,
+            weather_condition,
+            road_condition,
+            time_of_day,
+            year_range,
+            months,
+        )
+
+        return (
+            generate_card_body(
+                "Total Accidents",
+                f"{stats['total_accidents']:,.0f}",
+                stats["change_accidents"][0],
+                stats["change_accidents"][1],
+            ),
+            generate_card_body(
+                "Total Fatalities",
+                f"{stats['total_fatalities']:,.0f}",
+                stats["change_fatalities"][0],
+                stats["change_fatalities"][1],
+            ),
+            generate_card_body(
+                "Average ERT",
+                f"{stats['avg_response_time']:.1f} min",
+                stats["change_response_time"][0],
+                stats["change_response_time"][1],
+            ),
+            generate_card_body(
+                "Economic Loss",
+                format_currency(stats["total_economic_loss"]),
+                stats["change_economic_loss"][0],
+                stats["change_economic_loss"][1],
+            ),
+            generate_card_body("Leading Cause", stats["leading_cause"]),
+        )
