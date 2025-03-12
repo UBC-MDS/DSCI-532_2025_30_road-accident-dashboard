@@ -8,3 +8,4 @@ pyarrow==19.0.1
 vegafusion==1.6.9
 vegafusion-python-embed==1.6.9
 vl-convert-python==1.7.0
+flask-caching==2.3.1
