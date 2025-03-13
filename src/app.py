@@ -14,10 +14,10 @@ from data.canadian_data import canadian_data
 from string_resources.en import APP_MASTER_TITLE
 from flask_caching import Cache
 import callbacks  # DO NOT DELETE THIS x_x
-from callbacks.summary_callbacks import (
+from callbacks.summary_cards import (
     register_callbacks as register_summary_callbacks,
 )
-from callbacks.chart_callbacks import (
+from callbacks.charts import (
     register_callbacks as register_chart_callbacks,
 )
 
