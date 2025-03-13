@@ -73,14 +73,24 @@ def compute_pct_change_earliest_latest(df, col=None, agg="sum"):
         return (f"{pct_change:.1f}%", {"color": "green", "text-align": "center"})
 
 
-def generate_card_body(title, desc_value, subtitle=" ", subtitle_style=None):
-    s1, s2 = title.split(
-        " "
-    )  # assuming that the title is only 2 words e.g "Total Accidents"
+def generate_card_body(title, desc_value, subtitle=" ", subtitle_style=None, tooltip_desc=None):
+    s1, s2 = title.split(" ")  # assuming that the title is only 2 words e.g "Total Accidents"
+    tooltip_id = (f"{s1}-{s2}-tooltip").lower() # e.g 'total-accidents-tooltip'
     return dbc.Card(
         [
             dbc.CardHeader(
-                html.Div([s1, html.Br(), s2], style={"textAlign": "center"}),
+                html.Div(
+                    [
+                        # s1, html.Br(), s2,
+                        html.Span(f"{s1} {s2}"),  # Title text
+                        html.Abbr(
+                            "\u2753", 
+                            title=tooltip_desc, 
+                            style={"cursor": "pointer", "marginLeft": "5px", "color": "blue"}
+                        ),
+                    ],
+                    style={"textAlign": "center"}
+                ),
                 className="card-header",
             ),
             dbc.CardBody(
@@ -93,6 +103,12 @@ def generate_card_body(title, desc_value, subtitle=" ", subtitle_style=None):
                 ],
                 style={"padding": "15px"},
             ),
+            dbc.Tooltip(
+                tooltip_desc,  # The description to show on hover
+                target=tooltip_id,  # Tooltip attached to the question mark
+                placement="top",  # Tooltip position (top, bottom, left, right)
+                delay={"show": 0, "hide": 50},  # Delay in milliseconds
+            ) if tooltip_desc else None,
         ],
         className="card-shadow",
     )
@@ -111,87 +127,23 @@ def format_currency(value):
     else:
         return f"${value:,.1f}"
 
+def format_tooltip_description(year_range, months):
+    """
+    Format the year range and months filters passed into tooltips
+    """
+    start_year, end_year = year_range[0], year_range[1]
+    yr_text = f"between year {start_year} and year {end_year}"
+    if start_year == end_year:
+        yr_text = f"in year {start_year}"
 
-def get_card_total_accidents(df):
-    title = "Total Accidents"
+    m_text = ""
+    if len(months) > 1:
+        m_text = "for months [" + ", ".join(months) + "], "
+    elif len(months) == 1:
+        m_text = f"for month {months[0]}, "
 
-    total_acc = len(df)
-    desc_value = f"{total_acc:,.0f}"
-
-    change_text, change_style = compute_pct_change_earliest_latest(df, None)
-
-    return generate_card_body(
-        title, desc_value, subtitle=change_text, subtitle_style=change_style
-    )
-
-
-def get_card_total_fatalities(df):
-    title = "Total Fatalities"
-    total_fatalities = df["Number of Fatalities"].sum()
-    desc_value = f"{total_fatalities:,.0f}" if total_fatalities else 0
-
-    change_text, change_style = compute_pct_change_earliest_latest(
-        df, "Number of Fatalities", agg="sum"
-    )
-
-    return generate_card_body(
-        title, desc_value, subtitle=change_text, subtitle_style=change_style
-    )
-
-
-def get_card_avg_response_time(df):
-    title = "Average ERT"
-    avg_response_time = df["Emergency Response Time"].mean() if not df.empty else 0
-    desc_value = f"{avg_response_time:.1f} min"
-
-    change_text, change_style = compute_pct_change_earliest_latest(
-        df, "Emergency Response Time", agg="mean"
-    )
-
-    return generate_card_body(
-        title, desc_value, subtitle=change_text, subtitle_style=change_style
-    )
-
-
-def get_card_total_economic_loss(df):
-    """Total Economic Loss formatted with K, M, B suffixes."""
-    title = "Economic Loss"
-    total_eco_loss = df["Economic Loss"].sum() if not df.empty else 0
-
-    desc_value = format_currency(total_eco_loss)
-
-    change_text, change_style = compute_pct_change_earliest_latest(
-        df, "Economic Loss", agg="sum"
-    )
-
-    return generate_card_body(
-        title, desc_value, subtitle=change_text, subtitle_style=change_style
-    )
-
-
-def get_card_leading_cause(df):
-    cause_counts = df["Accident Cause"].value_counts()
-    if cause_counts.empty:
-        return generate_card_body("Leading Cause", "N/A")
-
-    top_cause = cause_counts.index[0]
-    # second_cause = cause_counts.index[1] if len(cause_counts) > 1 else None
-
-    title = "Leading Cause"
-    # If it's a single word, add a line break
-    if len(top_cause.split()) == 1:
-        desc_value = html.Span([top_cause, html.Br(), html.Br()])
-    else:
-        desc_value = top_cause  # Keep it as a normal string
-    # subtitle = f"Next: {second_cause}" if second_cause else ""
-
-    return generate_card_body(
-        title,
-        desc_value,
-        # subtitle=subtitle,
-        # subtitle_style={"text-align": "center", "fontSize": "14px", "color": "green"},
-    )
-
+    desc = m_text + yr_text
+    return desc
 
 def register_callbacks(app, cache):
     """Registers callbacks and caches dataset."""
@@ -262,6 +214,13 @@ def register_callbacks(app, cache):
             else "N/A"
         )
 
+        # dynamically compute tooltip description based on current filters
+        acc_tooltip_desc = "Total Accidents and percentage changes, " + format_tooltip_description(year_range, months)
+        fat_tooltip_desc = "Total Fatalities and percentage changes, " + format_tooltip_description(year_range, months)
+        ert_tooltip_desc = "Average Emergency Response Time and percentage changes, " + format_tooltip_description(year_range, months)
+        eco_tooltip_desc = "Total Economic Loss and percentage changes, " + format_tooltip_description(year_range, months)
+        cause_tooltip_desc = "Leading cause of accidents " + format_tooltip_description(year_range, months)
+
         return {
             "total_accidents": total_accidents,
             "total_fatalities": total_fatalities,
@@ -272,6 +231,11 @@ def register_callbacks(app, cache):
             "change_response_time": change_response_time,
             "change_economic_loss": change_economic_loss,
             "leading_cause": leading_cause,
+            "total_accidents_tooltip": acc_tooltip_desc,
+            "total_fatalities_tooltip": fat_tooltip_desc,
+            "avg_response_time_tooltip": ert_tooltip_desc,
+            "total_economic_loss_tooltip": eco_tooltip_desc,
+            "leading_cause_tooltip": cause_tooltip_desc
         }
 
     @callback(
@@ -315,24 +279,32 @@ def register_callbacks(app, cache):
                 f"{stats['total_accidents']:,.0f}",
                 stats["change_accidents"][0],
                 stats["change_accidents"][1],
+                tooltip_desc=stats['total_accidents_tooltip']
             ),
             generate_card_body(
                 "Total Fatalities",
                 f"{stats['total_fatalities']:,.0f}",
                 stats["change_fatalities"][0],
                 stats["change_fatalities"][1],
+                tooltip_desc=stats['total_fatalities_tooltip']
             ),
             generate_card_body(
                 "Average ERT",
                 f"{stats['avg_response_time']:.1f} min",
                 stats["change_response_time"][0],
                 stats["change_response_time"][1],
+                tooltip_desc=stats['avg_response_time_tooltip']
             ),
             generate_card_body(
                 "Economic Loss",
                 format_currency(stats["total_economic_loss"]),
                 stats["change_economic_loss"][0],
                 stats["change_economic_loss"][1],
+                tooltip_desc=stats['total_economic_loss_tooltip']
             ),
-            generate_card_body("Leading Cause", stats["leading_cause"]),
+            generate_card_body(
+                "Leading Cause", 
+                stats["leading_cause"],
+                tooltip_desc=stats['leading_cause_tooltip']
+            ),
         )
