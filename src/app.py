@@ -25,11 +25,8 @@ from callbacks.charts import (
 data = canadian_data
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.title = APP_MASTER_TITLE
-cache = Cache(
-    app.server,
-    config={"CACHE_TYPE": "filesystem",
-            "CACHE_DIR": "tmp"}
-    )
+server = app.server
+cache = Cache(server, config={"CACHE_TYPE": "filesystem", "CACHE_DIR": "tmp"})
 
 # App layout
 app.layout = dbc.Container(
