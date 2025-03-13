@@ -79,14 +79,24 @@ def compute_pct_change_earliest_latest(df, col=None, agg="sum"):
         return (f"{pct_change:.1f}%", {"color": "green", "text-align": "center"})
 
 
-def generate_card_body(title, desc_value, subtitle=" ", subtitle_style=None):
-    s1, s2 = title.split(
-        " "
-    )  # assuming that the title is only 2 words e.g "Total Accidents"
+def generate_card_body(title, desc_value, subtitle=" ", subtitle_style=None, tooltip_desc=None):
+    s1, s2 = title.split(" ")  # assuming that the title is only 2 words e.g "Total Accidents"
+    tooltip_id = (f"{s1}-{s2}-tooltip").lower() # e.g 'total-accidents-tooltip'
     return dbc.Card(
         [
             dbc.CardHeader(
-                html.Div([s1, html.Br(), s2], style={"textAlign": "center"}),
+                html.Div(
+                    [
+                        # s1, html.Br(), s2,
+                        html.Span(f"{s1} {s2}"),  # Title text
+                        html.Abbr(
+                            "\u2753", 
+                            title=tooltip_desc, 
+                            style={"cursor": "pointer", "marginLeft": "5px", "color": "blue"}
+                        ),
+                    ],
+                    style={"textAlign": "center"}
+                ),
                 className="card-header",
             ),
             dbc.CardBody(
@@ -99,6 +109,12 @@ def generate_card_body(title, desc_value, subtitle=" ", subtitle_style=None):
                 ],
                 style={"padding": "15px"},
             ),
+            dbc.Tooltip(
+                tooltip_desc,  # The description to show on hover
+                target=tooltip_id,  # Tooltip attached to the question mark
+                placement="top",  # Tooltip position (top, bottom, left, right)
+                delay={"show": 0, "hide": 50},  # Delay in milliseconds
+            ) if tooltip_desc else None,
         ],
         className="card-shadow",
     )
@@ -117,8 +133,25 @@ def format_currency(value):
     else:
         return f"${value:,.1f}"
 
+def format_tooltip_description(year_range, months):
+    """
+    Format the year range and months filters passed into tooltips
+    """
+    start_year, end_year = year_range[0], year_range[1]
+    yr_text = f"between year {start_year} and year {end_year}"
+    if start_year == end_year:
+        yr_text = f"in year {start_year}"
 
-def get_card_total_accidents(df):
+    m_text = ""
+    if len(months) > 1:
+        m_text = "for months [" + ", ".join(months) + "], "
+    elif len(months) == 1:
+        m_text = f"for month {months[0]}, "
+
+    desc = m_text + yr_text
+    return desc
+
+def get_card_total_accidents(df, year_range, months):
     title = "Total Accidents"
 
     total_acc = len(df)
@@ -126,12 +159,14 @@ def get_card_total_accidents(df):
 
     change_text, change_style = compute_pct_change_earliest_latest(df, None)
 
+    tooltip_desc = "Total Accidents and percentage changes, " + format_tooltip_description(year_range, months)
+
     return generate_card_body(
-        title, desc_value, subtitle=change_text, subtitle_style=change_style
+        title, desc_value, subtitle=change_text, subtitle_style=change_style, tooltip_desc=tooltip_desc
     )
 
 
-def get_card_total_fatalities(df):
+def get_card_total_fatalities(df, year_range, months):
     title = "Total Fatalities"
     total_fatalities = df["Number of Fatalities"].sum()
     desc_value = f"{total_fatalities:,.0f}" if total_fatalities else 0
@@ -140,12 +175,14 @@ def get_card_total_fatalities(df):
         df, "Number of Fatalities", agg="sum"
     )
 
+    tooltip_desc = "Total Fatalities and percentage changes, " + format_tooltip_description(year_range, months)
+
     return generate_card_body(
-        title, desc_value, subtitle=change_text, subtitle_style=change_style
+        title, desc_value, subtitle=change_text, subtitle_style=change_style, tooltip_desc=tooltip_desc
     )
 
 
-def get_card_avg_response_time(df):
+def get_card_avg_response_time(df, year_range, months):
     title = "Average ERT"
     avg_response_time = df["Emergency Response Time"].mean() if not df.empty else 0
     desc_value = f"{avg_response_time:.1f} min"
@@ -154,12 +191,14 @@ def get_card_avg_response_time(df):
         df, "Emergency Response Time", agg="mean"
     )
 
+    tooltip_desc = "Average Emergency Response Time and percentage changes, " + format_tooltip_description(year_range, months)
+
     return generate_card_body(
-        title, desc_value, subtitle=change_text, subtitle_style=change_style
+        title, desc_value, subtitle=change_text, subtitle_style=change_style, tooltip_desc=tooltip_desc
     )
 
 
-def get_card_total_economic_loss(df):
+def get_card_total_economic_loss(df, year_range, months):
     """Total Economic Loss formatted with K, M, B suffixes."""
     title = "Economic Loss"
     total_eco_loss = df["Economic Loss"].sum() if not df.empty else 0
@@ -170,12 +209,14 @@ def get_card_total_economic_loss(df):
         df, "Economic Loss", agg="sum"
     )
 
+    tooltip_desc = "Total Economic Loss and percentage changes, " + format_tooltip_description(year_range, months)
+
     return generate_card_body(
-        title, desc_value, subtitle=change_text, subtitle_style=change_style
+        title, desc_value, subtitle=change_text, subtitle_style=change_style, tooltip_desc=tooltip_desc
     )
 
 
-def get_card_leading_cause(df):
+def get_card_leading_cause(df, year_range, months):
     cause_counts = df["Accident Cause"].value_counts()
     if cause_counts.empty:
         return generate_card_body("Leading Cause", "N/A")
@@ -191,9 +232,12 @@ def get_card_leading_cause(df):
         desc_value = top_cause  # Keep it as a normal string
     # subtitle = f"Next: {second_cause}" if second_cause else ""
 
+    tooltip_desc = "Leading cause of accidents " + format_tooltip_description(year_range, months)
+
     return generate_card_body(
         title,
         desc_value,
+        tooltip_desc=tooltip_desc
         # subtitle=subtitle,
         # subtitle_style={"text-align": "center", "fontSize": "14px", "color": "green"},
     )
@@ -237,11 +281,11 @@ def load_summary_cards(
     )
 
     # Build each card
-    card_total_accidents = get_card_total_accidents(df)
-    card_total_fatalities = get_card_total_fatalities(df)
-    card_avg_response_time = get_card_avg_response_time(df)
-    card_total_economic_loss = get_card_total_economic_loss(df)
-    card_leading_cause = get_card_leading_cause(df)
+    card_total_accidents = get_card_total_accidents(df, year_range, months)
+    card_total_fatalities = get_card_total_fatalities(df, year_range, months)
+    card_avg_response_time = get_card_avg_response_time(df, year_range, months)
+    card_total_economic_loss = get_card_total_economic_loss(df, year_range, months)
+    card_leading_cause = get_card_leading_cause(df, year_range, months)
 
     return (
         card_total_accidents,
