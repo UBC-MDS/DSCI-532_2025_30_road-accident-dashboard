@@ -1,4 +1,4 @@
-# DSCI 532 - Group 30: Road Accident
+# DSCI 532 - Group 30: Canadian Road Accident Tracker
 
 ## Our Motivation and Purpose  
 
@@ -12,14 +12,34 @@ We are data analysts specializing in transportation safety. Our goal is to help 
 
 This project uses data from the [Global Road Accidents Dataset](https://www.kaggle.com/datasets/ankushpanday1/global-road-accidents-dataset) available on Kaggle.  
 
-## Usage  
+## Usage
 
-- Use the **region selector** to explore accident trends across different locations.  
-- Filter by **weather conditions, vehicle types, or driver characteristics** to identify key risk factors.  
-- Analyze **accident severity distributions** to understand patterns and potential causes.  
-- Compare trends over time using the **date range filter**.  
+Navigate through the dashboard using the following interactive features:
 
-The interactive visualizations update based on user inputs, providing actionable insights for policy improvements.  
+- **Group By Options** – Aggregate data based on:
+  - Accident Severity
+  - Time of Accident
+  - Settlement Type (Urban, Rural, etc.)
+  - Season (Winter, Spring, Summer, Fall)
+
+- **Filter Options** – Select one or more:
+  - Settlement Type
+  - Season
+  - Weather Condition
+  - Road Condition
+  - Time of Day (Morning, Afternoon, Evening, Night)
+  - Year – Adjust using a range slider
+  - Month – Select specific months (Jan–Dec)
+  - Count Type (For Total Accidents by Age/Weather/Road Conditions charts only)
+    - Raw Count – Displays the absolute count of accidents for each group
+    - Normalized Count – Converts accident counts into fractions (relative proportions) instead of absolute values
+
+- **Apply or Reset Filters**
+  - Click “Apply Filters” to update visualizations.
+  - Click “Reset Filters” to clear all selections.
+
+- **Charts** – Dynamically update based on selected filters.
+- **Hover Effects** – Display additional insights when hovering over charts and summary cards.
 
 ## Demo
 
@@ -62,6 +82,8 @@ For any issues regarding running the dashboard or feature requests, please conta
    ```shell
    python src/app.py
    ```  
+
+6. Open your browser and navigate to `http://localhost:8050/` to view the dashboard.
 
 ## Contributing
 
