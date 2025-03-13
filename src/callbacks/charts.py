@@ -192,7 +192,9 @@ def get_line_chart(df, input_category):
                 category_numeric,
                 legend=alt.Legend(
                     orient="none",
+                    legendX=650,
                     legendY=-50,
+                    offset=0,
                     direction="horizontal",
                     titleAnchor="middle",
                 ),
