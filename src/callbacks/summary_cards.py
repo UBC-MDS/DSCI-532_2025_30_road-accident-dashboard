@@ -1,7 +1,6 @@
-from dash import Input, Output, callback, html
+from dash import Input, Output, State, callback, ctx, html
 import dash_bootstrap_components as dbc
 from data.canadian_data import canadian_data
-import functools
 
 
 def filter_data(
@@ -73,9 +72,13 @@ def compute_pct_change_earliest_latest(df, col=None, agg="sum"):
         return (f"{pct_change:.1f}%", {"color": "green", "text-align": "center"})
 
 
-def generate_card_body(title, desc_value, subtitle=" ", subtitle_style=None, tooltip_desc=None):
-    s1, s2 = title.split(" ")  # assuming that the title is only 2 words e.g "Total Accidents"
-    tooltip_id = (f"{s1}-{s2}-tooltip").lower() # e.g 'total-accidents-tooltip'
+def generate_card_body(
+    title, desc_value, subtitle=" ", subtitle_style=None, tooltip_desc=None
+):
+    s1, s2 = title.split(
+        " "
+    )  # assuming that the title is only 2 words e.g "Total Accidents"
+    tooltip_id = (f"{s1}-{s2}-tooltip").lower()  # e.g 'total-accidents-tooltip'
     return dbc.Card(
         [
             dbc.CardHeader(
@@ -84,12 +87,16 @@ def generate_card_body(title, desc_value, subtitle=" ", subtitle_style=None, too
                         # s1, html.Br(), s2,
                         html.Span(f"{s1} {s2}"),  # Title text
                         html.Abbr(
-                            "\u2753", 
-                            title=tooltip_desc, 
-                            style={"cursor": "pointer", "marginLeft": "5px", "color": "blue"}
+                            "\u2753",
+                            title=tooltip_desc,
+                            style={
+                                "cursor": "pointer",
+                                "marginLeft": "5px",
+                                "color": "blue",
+                            },
                         ),
                     ],
-                    style={"textAlign": "center"}
+                    style={"textAlign": "center"},
                 ),
                 className="card-header",
             ),
@@ -103,12 +110,16 @@ def generate_card_body(title, desc_value, subtitle=" ", subtitle_style=None, too
                 ],
                 style={"padding": "15px"},
             ),
-            dbc.Tooltip(
-                tooltip_desc,  # The description to show on hover
-                target=tooltip_id,  # Tooltip attached to the question mark
-                placement="top",  # Tooltip position (top, bottom, left, right)
-                delay={"show": 0, "hide": 50},  # Delay in milliseconds
-            ) if tooltip_desc else None,
+            (
+                dbc.Tooltip(
+                    tooltip_desc,
+                    target=tooltip_id,
+                    placement="top",
+                    delay={"show": 0, "hide": 0}
+                )
+                if tooltip_desc
+                else None
+            ),
         ],
         className="card-shadow",
     )
@@ -127,6 +138,7 @@ def format_currency(value):
     else:
         return f"${value:,.1f}"
 
+
 def format_tooltip_description(year_range, months):
     """
     Format the year range and months filters passed into tooltips
@@ -144,6 +156,7 @@ def format_tooltip_description(year_range, months):
 
     desc = m_text + yr_text
     return desc
+
 
 def register_callbacks(app, cache):
     """Registers callbacks and caches dataset."""
@@ -215,11 +228,25 @@ def register_callbacks(app, cache):
         )
 
         # dynamically compute tooltip description based on current filters
-        acc_tooltip_desc = "Total Accidents and percentage changes, " + format_tooltip_description(year_range, months)
-        fat_tooltip_desc = "Total Fatalities and percentage changes, " + format_tooltip_description(year_range, months)
-        ert_tooltip_desc = "Average Emergency Response Time and percentage changes, " + format_tooltip_description(year_range, months)
-        eco_tooltip_desc = "Total Economic Loss and percentage changes, " + format_tooltip_description(year_range, months)
-        cause_tooltip_desc = "Leading cause of accidents " + format_tooltip_description(year_range, months)
+        acc_tooltip_desc = (
+            "Total Accidents and percentage changes, "
+            + format_tooltip_description(year_range, months)
+        )
+        fat_tooltip_desc = (
+            "Total Fatalities and percentage changes, "
+            + format_tooltip_description(year_range, months)
+        )
+        ert_tooltip_desc = (
+            "Average Emergency Response Time and percentage changes, "
+            + format_tooltip_description(year_range, months)
+        )
+        eco_tooltip_desc = (
+            "Total Economic Loss and percentage changes, "
+            + format_tooltip_description(year_range, months)
+        )
+        cause_tooltip_desc = "Leading cause of accidents " + format_tooltip_description(
+            year_range, months
+        )
 
         return {
             "total_accidents": total_accidents,
@@ -235,7 +262,7 @@ def register_callbacks(app, cache):
             "total_fatalities_tooltip": fat_tooltip_desc,
             "avg_response_time_tooltip": ert_tooltip_desc,
             "total_economic_loss_tooltip": eco_tooltip_desc,
-            "leading_cause_tooltip": cause_tooltip_desc
+            "leading_cause_tooltip": cause_tooltip_desc,
         }
 
     @callback(
@@ -244,15 +271,19 @@ def register_callbacks(app, cache):
         Output("card-avg-resp", "children"),
         Output("card-total-eco-loss", "children"),
         Output("card-leading-cause", "children"),
-        Input("urban-rural", "value"),
-        Input("season", "value"),
-        Input("weather-condition", "value"),
-        Input("road-condition", "value"),
-        Input("time-of-day", "value"),
-        Input("year-slider", "value"),
-        Input("month-checklist", "value"),
+        Input("apply-filter", "n_clicks"),
+        Input("reset-filter", "n_clicks"),
+        State("urban-rural", "value"),
+        State("season", "value"),
+        State("weather-condition", "value"),
+        State("road-condition", "value"),
+        State("time-of-day", "value"),
+        State("year-slider", "value"),
+        State("month-checklist", "value"),
     )
     def load_summary_cards(
+        apply_clicks,
+        reset_clicks,
         urban_rural,
         season,
         weather_condition,
@@ -261,7 +292,17 @@ def register_callbacks(app, cache):
         year_range,
         months,
     ):
-        """Load and update summary cards."""
+        triggered = ctx.triggered_id
+        # If the Reset button is clicked, revert filters to their default.
+        min_year, max_year = canadian_data.Year.min(), canadian_data.Year.max()
+        if triggered == "reset-filter":
+            urban_rural = []
+            season = []
+            weather_condition = []
+            road_condition = []
+            time_of_day = []
+            year_range = [min_year, max_year]
+            months = []
 
         stats = compute_summary_stats(
             urban_rural,
@@ -279,32 +320,32 @@ def register_callbacks(app, cache):
                 f"{stats['total_accidents']:,.0f}",
                 stats["change_accidents"][0],
                 stats["change_accidents"][1],
-                tooltip_desc=stats['total_accidents_tooltip']
+                tooltip_desc=stats["total_accidents_tooltip"],
             ),
             generate_card_body(
                 "Total Fatalities",
                 f"{stats['total_fatalities']:,.0f}",
                 stats["change_fatalities"][0],
                 stats["change_fatalities"][1],
-                tooltip_desc=stats['total_fatalities_tooltip']
+                tooltip_desc=stats["total_fatalities_tooltip"],
             ),
             generate_card_body(
                 "Average ERT",
                 f"{stats['avg_response_time']:.1f} min",
                 stats["change_response_time"][0],
                 stats["change_response_time"][1],
-                tooltip_desc=stats['avg_response_time_tooltip']
+                tooltip_desc=stats["avg_response_time_tooltip"],
             ),
             generate_card_body(
                 "Economic Loss",
                 format_currency(stats["total_economic_loss"]),
                 stats["change_economic_loss"][0],
                 stats["change_economic_loss"][1],
-                tooltip_desc=stats['total_economic_loss_tooltip']
+                tooltip_desc=stats["total_economic_loss_tooltip"],
             ),
             generate_card_body(
-                "Leading Cause", 
+                "Leading Cause",
                 stats["leading_cause"],
-                tooltip_desc=stats['leading_cause_tooltip']
+                tooltip_desc=stats["leading_cause_tooltip"],
             ),
         )
