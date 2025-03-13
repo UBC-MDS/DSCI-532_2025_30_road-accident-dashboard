@@ -108,6 +108,7 @@ def generate_card_body(title, desc_value, subtitle=" ", subtitle_style=None, too
                 target=tooltip_id,  # Tooltip attached to the question mark
                 placement="top",  # Tooltip position (top, bottom, left, right)
                 delay={"show": 0, "hide": 50},  # Delay in milliseconds
+                trigger='hover',
             ) if tooltip_desc else None,
         ],
         className="card-shadow",
