@@ -1,13 +1,18 @@
 import dash_bootstrap_components as dbc
 from dash import html, dcc
-from constants.constants import GROUP_BY_SEVERITY, GROUP_BY_TIME, GROUP_BY_SETTLEMENT_TYPE, GROUP_BY_SEASON
+from constants.constants import (
+    GROUP_BY_SEVERITY,
+    GROUP_BY_TIME,
+    GROUP_BY_SETTLEMENT_TYPE,
+    GROUP_BY_SEASON,
+)
 from string_resources.en import (
     SIDEBAR_TITLE,
     SIDEBAR_GROUP_BY_LABEL,
     SIDEBAR_GROUP_BY_OPTION_SEVERITY,
     SIDEBAR_GROUP_BY_OPTION_TIME,
     SIDEBAR_GROUP_BY_SETTLEMENT_TYPE,
-    SIDEBAR_GROUP_BY_SEASON
+    SIDEBAR_GROUP_BY_SEASON,
 )
 
 from data.canadian_data import canadian_data
@@ -61,23 +66,33 @@ group_by_radio = dcc.RadioItems(
 count_type_radio = dcc.RadioItems(
     options=[
         {"label": "Raw count", "value": "Raw"},
-        {"label": "Normalized count", "value": "Normalized"}
+        {"label": "Normalized count", "value": "Normalized"},
     ],
     value="Raw",
     id="count_type_radio",
     inline=False,
-    className="custom-radio-items"
+    className="custom-radio-items",
 )
 
 sidebar = dbc.Col(
     [
-        html.H4(SIDEBAR_TITLE),
+        html.Div(
+            dbc.Button(
+                "Apply Filters",
+                id="apply-filter",
+                className="apply-filter",
+            ),
+            style={"textAlign": "center"},
+        ),
         html.Br(),
         html.H6(SIDEBAR_GROUP_BY_LABEL),
         group_by_radio,
         html.Br(),
         html.H6("Count type"),
-        html.I("Notes: For Total Accidents by Age/Weather/Road Conditions charts only!", style={"font-size": "12px"}),
+        html.I(
+            "Notes: For Total Accidents by Age/Weather/Road Conditions charts only!",
+            style={"font-size": "12px"},
+        ),
         count_type_radio,
         html.Br(),
         html.Label("Settlement Type"),
@@ -143,11 +158,14 @@ sidebar = dbc.Col(
             className="month-checklist",
         ),
         html.Br(),
-        dbc.Button(
-            "Reset Filters",
-            id="reset-button",
-            className="reset-button mt-3",  # Keep Bootstrap spacing class
-        )
+        html.Div(
+            dbc.Button(
+                "Reset Filters",
+                id="reset-filter",
+                className="reset-filter",
+            ),
+            style={"textAlign": "center"},
+        ),
     ],
     className="h-100",
     style={

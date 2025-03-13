@@ -95,16 +95,29 @@
   margin: 10px;
 }
 
-.reset-button {
+.reset-filter {
   background-color: white;
   color: black;
-  width: 100%;
-  padding: 10px;
+  width: 50%;
   border: none;
 }
 
-.reset-button:hover {
+.reset-filter:hover {
   background-color: #1e3a8a;;
+  color: white;
+  border: none;
+}
+
+
+.apply-filter {
+  background-color: white;
+  color: black;
+  width:100%;
+  border: none;
+}
+
+.apply-filter:hover {
+  background-color: #dc3545;;
   color: white;
   border: none;
 }

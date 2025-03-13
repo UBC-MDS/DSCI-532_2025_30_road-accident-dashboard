@@ -1,5 +1,5 @@
 import altair as alt
-from dash import Input, Output, callback, ctx
+from dash import Input, Output, State, callback, ctx
 from constants.constants import (
     GROUP_BY_SEVERITY,
     GROUP_BY_TIME,
@@ -15,7 +15,6 @@ from string_resources.en import (
     CHART_GROUP_BY_SETTLEMENT_TYPE,
     CHART_GROUP_BY_SEASON,
 )
-import functools
 
 alt.data_transformers.enable("vegafusion")
 
@@ -290,18 +289,21 @@ def register_callbacks(app, cache):
         Output("month-checklist", "value"),
         Output("group_by_radio", "value"),
         Output("count_type_radio", "value"),
-        Input("group_by_radio", "value"),
-        Input("count_type_radio", "value"),
-        Input("urban-rural", "value"),
-        Input("season", "value"),
-        Input("weather-condition", "value"),
-        Input("road-condition", "value"),
-        Input("time-of-day", "value"),
-        Input("year-slider", "value"),
-        Input("month-checklist", "value"),
-        Input("reset-button", "n_clicks"),
+        Input("apply-filter", "n_clicks"),
+        Input("reset-filter", "n_clicks"),
+        State("group_by_radio", "value"),
+        State("count_type_radio", "value"),
+        State("urban-rural", "value"),
+        State("season", "value"),
+        State("weather-condition", "value"),
+        State("road-condition", "value"),
+        State("time-of-day", "value"),
+        State("year-slider", "value"),
+        State("month-checklist", "value"),
     )
     def load_chart(
+        apply_clicks,
+        reset_clicks,
         group_by_category,
         count_type,
         urban_rural,
@@ -311,9 +313,21 @@ def register_callbacks(app, cache):
         time_of_day,
         year_range,
         months,
-        reset_clicks,
     ):
-        # Convert lists to tuples for caching stability
+        triggered = ctx.triggered_id
+        min_year, max_year = canadian_data.Year.min(), canadian_data.Year.max()
+        if triggered == "reset-filter":
+            urban_rural = []
+            season = []
+            weather_condition = []
+            road_condition = []
+            time_of_day = []
+            year_range = [min_year, max_year]
+            months = []
+            group_by_category = GROUP_BY_SEVERITY
+            count_type = "Raw"
+
+        # Convert lists to tuples for cache stability
         urban_rural = tuple(urban_rural or [])
         season = tuple(season or [])
         weather_condition = tuple(weather_condition or [])
@@ -321,19 +335,6 @@ def register_callbacks(app, cache):
         time_of_day = tuple(time_of_day or [])
         months = tuple(months or [])
         year_range = tuple(year_range)
-
-        min_year, max_year = canadian_data.Year.min(), canadian_data.Year.max()
-        # Check if Reset Button was clicked
-        if ctx.triggered_id == "reset-button":
-            urban_rural = ()
-            season = ()
-            weather_condition = ()
-            road_condition = ()
-            time_of_day = ()
-            year_range = (min_year, max_year)
-            months = ()
-            group_by_category = GROUP_BY_SEVERITY
-            count_type = "Raw"
 
         raw_df = get_cached_data()
         df = filter_data(
