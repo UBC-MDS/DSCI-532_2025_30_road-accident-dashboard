@@ -12,13 +12,20 @@ from components.charts import (
 )
 from data.canadian_data import canadian_data
 from string_resources.en import APP_MASTER_TITLE
+from flask_caching import Cache
 import callbacks  # DO NOT DELETE THIS x_x
+from callbacks.summary_callbacks import (
+    register_callbacks as register_summary_callbacks,
+)
+from callbacks.chart_callbacks import (
+    register_callbacks as register_chart_callbacks,
+)
 
 # App init
 data = canadian_data
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.title = APP_MASTER_TITLE
-server = app.server
+cache = Cache(app.server, config={"CACHE_TYPE": "filesystem", "CACHE_DIR": "tmp"})
 
 # App layout
 app.layout = dbc.Container(
@@ -61,6 +68,10 @@ app.layout = dbc.Container(
         ),
     ]
 )
+
+# Call both register_callbacks functions
+register_summary_callbacks(app, cache)
+register_chart_callbacks(app, cache)
 
 if __name__ == "__main__":
     app.run(debug=False)
