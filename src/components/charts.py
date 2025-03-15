@@ -14,6 +14,7 @@ def create_chart_card(title, chart_id):
     return dbc.Card(
         children=[
             html.H5(title),
+            html.Br(),
             dcc.Loading(children=[dvc.Vega(id=chart_id, spec={})]),
         ],
         body=True,

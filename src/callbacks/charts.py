@@ -94,7 +94,7 @@ def get_emergency_response_time_chart(df, input_category):
                 alt.Tooltip("Emergency Response Time:Q"),
             ],
         )
-    ).properties(width=330, height=250)
+    ).properties(width=330, height=260)
 
     return chart
 
