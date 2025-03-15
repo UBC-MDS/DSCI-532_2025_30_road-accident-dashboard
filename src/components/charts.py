@@ -19,16 +19,25 @@ def create_chart_card(title, chart_id):
         body=True,
     )
 
+def create_bar_chart_card(title, chart_id):
+    return dbc.Card(
+        children=[
+            html.H5(title),
+            dbc.Checkbox(id=f"{chart_id}_normalize_checkbox", label="Normalize Count"),
+            dcc.Loading(children=[dvc.Vega(id=chart_id, spec={})]),
+        ],
+        body=True,
+    )
 
 # Create chart components using the function
+line_chart = create_chart_card(CHART_LINE_LABEL, "line_chart")
 emergency_response_time_chart = create_chart_card(
     CHART_EMERGENCY_RESPONSE_TIME_LABEL, "emergency_response_time_chart"
 )
-weather_chart = create_chart_card(
+age_chart = create_bar_chart_card(CHART_AGE_LABEL, "age_chart")
+weather_chart = create_bar_chart_card(
     CHART_CATEGORICAL_BY_WEATHER_CONDITION, "weather_chart"
 )
-road_condition_chart = create_chart_card(
+road_condition_chart = create_bar_chart_card(
     CHART_CATEGORICAL_BY_ROAD_CONDITION, "road_chart"
 )
-age_chart = create_chart_card(CHART_AGE_LABEL, "age_chart")
-line_chart = create_chart_card(CHART_LINE_LABEL, "line_chart")
