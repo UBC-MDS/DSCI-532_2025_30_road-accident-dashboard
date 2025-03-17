@@ -72,10 +72,9 @@ def compute_pct_change_earliest_latest(df, col=None, agg="sum"):
 def generate_card_body(
     title, desc_value, subtitle=" ", subtitle_style=None, tooltip_desc=None
 ):
-    # Split title into two parts; if there's only one word, s2 remains empty.
     words = title.split(" ", 1)
     s1, s2 = words if len(words) == 2 else (title, "")
-    tooltip_id = (f"{s1}-{s2}-tooltip").lower()  # e.g., 'total-accidents-tooltip'
+    tooltip_id = (f"{s1}-{s2}-tooltip").lower()
     return dbc.Card(
         [
             dbc.CardHeader(
@@ -139,17 +138,18 @@ def format_tooltip_description(year_range, months):
     """
     Format the year range and months filters for tooltips.
     """
-    start_year, end_year = year_range[0], year_range[1]
-    yr_text = (
-        f"between year {start_year} and year {end_year}"
-        if start_year != end_year
-        else f"in year {start_year}"
-    )
+    start_year, end_year = year_range
+    if start_year != end_year:
+        yr_text = f"between year {start_year} and year {end_year}"
+    else:
+        yr_text = f"in year {start_year}"
+
     m_text = ""
     if months and len(months) > 1:
         m_text = "for months [" + ", ".join(months) + "], "
     elif months and len(months) == 1:
         m_text = f"for month {months[0]}, "
+
     return m_text + yr_text
 
 
@@ -158,6 +158,40 @@ def register_callbacks(app, cache):
     def get_cached_data():
         """Load and cache the raw dataset."""
         return canadian_data
+
+    @cache.memoize()
+    def get_filtered_data(
+        urban_rural,
+        season,
+        weather_condition,
+        road_condition,
+        time_of_day,
+        year_range,
+        months,
+    ):
+        """
+        Return the filtered DataFrame from cache,
+        so we don't repeatedly filter for the same combination of filters.
+        """
+        urban_rural = tuple(urban_rural or [])
+        season = tuple(season or [])
+        weather_condition = tuple(weather_condition or [])
+        road_condition = tuple(road_condition or [])
+        time_of_day = tuple(time_of_day or [])
+        months = tuple(months or [])
+        year_range = tuple(year_range)
+
+        raw_df = get_cached_data()
+        return filter_data(
+            raw_df,
+            urban_rural,
+            season,
+            weather_condition,
+            road_condition,
+            time_of_day,
+            year_range,
+            months,
+        )
 
     @cache.memoize()
     def compute_summary_stats(
@@ -171,8 +205,8 @@ def register_callbacks(app, cache):
     ):
         """
         Compute summary statistics based on filtered data.
-        Convert mutable inputs into tuples for caching consistency.
         """
+        # Convert all filters to tuples for consistent caching keys.
         urban_rural = tuple(urban_rural or [])
         season = tuple(season or [])
         weather_condition = tuple(weather_condition or [])
@@ -181,8 +215,7 @@ def register_callbacks(app, cache):
         months = tuple(months or [])
         year_range = tuple(year_range)
 
-        df = filter_data(
-            get_cached_data(),
+        df = get_filtered_data(
             urban_rural,
             season,
             weather_condition,
@@ -219,12 +252,13 @@ def register_callbacks(app, cache):
             leading_cause = "N/A"
         else:
             top_cause = cause_counts.index[0]
-            # If it's a single word, insert line breaks.
             if len(top_cause.split()) == 1:
+                # Insert line breaks if it's a single word
                 leading_cause = html.Span([top_cause, html.Br(), html.Br()])
             else:
                 leading_cause = top_cause
 
+        # Dynamically compute tooltip descriptions
         acc_tooltip_desc = (
             "Total Accidents and percentage changes, "
             + format_tooltip_description(year_range, months)
@@ -290,8 +324,9 @@ def register_callbacks(app, cache):
         months,
     ):
         triggered = ctx.triggered_id
-        # If the Reset button is clicked, revert filters to their default values.
         min_year, max_year = get_cached_data().Year.min(), get_cached_data().Year.max()
+
+        # If the Reset button is clicked, revert filters to their defaults.
         if triggered == "reset-filter":
             urban_rural = []
             season = []
@@ -300,6 +335,8 @@ def register_callbacks(app, cache):
             time_of_day = []
             year_range = [min_year, max_year]
             months = []
+
+        # Compute summary stats from the (cached) filtered data
         stats = compute_summary_stats(
             urban_rural,
             season,
@@ -309,6 +346,7 @@ def register_callbacks(app, cache):
             year_range,
             months,
         )
+
         return (
             generate_card_body(
                 "Total Accidents",
