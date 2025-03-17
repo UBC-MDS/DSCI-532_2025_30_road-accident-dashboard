@@ -75,9 +75,8 @@ def compute_pct_change_earliest_latest(df, col=None, agg="sum"):
 def generate_card_body(
     title, desc_value, subtitle=" ", subtitle_style=None, tooltip_desc=None
 ):
-    s1, s2 = title.split(
-        " "
-    )  # assuming that the title is only 2 words e.g "Total Accidents"
+    words = title.split(" ", 1)
+    s1, s2 = words if len(words) == 2 else (title, "")
     tooltip_id = (f"{s1}-{s2}-tooltip").lower()  # e.g 'total-accidents-tooltip'
     return dbc.Card(
         [
@@ -221,11 +220,16 @@ def register_callbacks(app, cache):
             df, "Economic Loss", agg="sum"
         )
 
-        leading_cause = (
-            df["Accident Cause"].value_counts().idxmax()
-            if not df["Accident Cause"].empty
-            else "N/A"
-        )
+        cause_counts = df["Accident Cause"].value_counts()
+        if cause_counts.empty:
+            leading_cause = "N/A"
+        else:
+            top_cause = cause_counts.index[0]
+            # If it's a single word, add a line break
+            if len(top_cause.split()) == 1:
+                leading_cause = html.Span([top_cause, html.Br(), html.Br()])
+            else:
+                leading_cause = top_cause
 
         # dynamically compute tooltip description based on current filters
         acc_tooltip_desc = (
