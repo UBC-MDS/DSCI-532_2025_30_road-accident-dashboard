@@ -30,7 +30,14 @@ app = Dash(
 )
 app.title = APP_MASTER_TITLE
 server = app.server
-cache = Cache(server, config={"CACHE_TYPE": "filesystem", "CACHE_DIR": "tmp"})
+cache = Cache(
+    server,
+    config={
+        "CACHE_TYPE": "filesystem",
+        "CACHE_DIR": "tmp",
+        "CACHE_DEFAULT_TIMEOUT": 300,
+    },
+)
 
 # App layout
 app.layout = dbc.Container(
