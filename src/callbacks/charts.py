@@ -1,4 +1,5 @@
 import altair as alt
+import pandas as pd
 from dash import Input, Output, State, callback, ctx
 from constants.constants import (
     GROUP_BY_SEVERITY,
@@ -15,7 +16,6 @@ from string_resources.en import (
     CHART_GROUP_BY_SETTLEMENT_TYPE,
     CHART_GROUP_BY_SEASON,
 )
-import pandas as pd
 
 alt.data_transformers.enable("vegafusion")
 
@@ -49,7 +49,6 @@ def filter_data(
 
 
 def get_category(input_category):
-    # python does not have switch-case SMH
     if input_category == GROUP_BY_SEVERITY:
         return (
             CHART_GROUP_BY_SEVERITY_LABEL,
@@ -95,17 +94,15 @@ def get_emergency_response_time_chart(df, input_category):
             ],
         )
     ).properties(width=330, height=260)
-
     return chart
 
 
-def get_weather_chart(df, input_category, count_type = "zero"):
+def get_weather_chart(df, input_category, count_type="zero"):
     category_label, category_numeric, category_order = get_category(input_category)
     filtered_values = df[category_label].unique().tolist()
-    dynamic_order = [value for value in category_order if value in filtered_values]
+    dynamic_order = [v for v in category_order if v in filtered_values]
     stacked_type = "normalize" if count_type == "Normalized" else "zero"
-    count_axis_title = f"{count_type} " + CHART_ACCIDENT_COUNT_Y_AXIS_LABEL
-
+    count_axis_title = f"{count_type} {CHART_ACCIDENT_COUNT_Y_AXIS_LABEL}"
     chart = (
         alt.Chart(df)
         .mark_bar()
@@ -137,13 +134,12 @@ def get_weather_chart(df, input_category, count_type = "zero"):
     return chart
 
 
-def get_age_chart(df, input_category, count_type = "zero"):
+def get_age_chart(df, input_category, count_type="zero"):
     category_label, category_numeric, category_order = get_category(input_category)
     filtered_values = df[category_label].unique().tolist()
-    dynamic_order = [value for value in category_order if value in filtered_values]
+    dynamic_order = [v for v in category_order if v in filtered_values]
     stacked_type = "normalize" if count_type == "Normalized" else "zero"
-    count_axis_title = f"{count_type} " + CHART_ACCIDENT_COUNT_Y_AXIS_LABEL
-
+    count_axis_title = f"{count_type} {CHART_ACCIDENT_COUNT_Y_AXIS_LABEL}"
     chart = (
         alt.Chart(df)
         .mark_bar()
@@ -176,10 +172,8 @@ def get_line_chart(df, input_category):
     accident_counts = (
         df.groupby(["Year", category_label]).size().reset_index(name="Accident Count")
     )
-
     filtered_values = df[category_label].unique().tolist()
-    dynamic_order = [value for value in category_order if value in filtered_values]
-
+    dynamic_order = [v for v in category_order if v in filtered_values]
     line = (
         alt.Chart(accident_counts)
         .mark_line()
@@ -202,7 +196,6 @@ def get_line_chart(df, input_category):
             ),
         )
     )
-
     points = (
         alt.Chart(accident_counts)
         .mark_point()
@@ -213,18 +206,16 @@ def get_line_chart(df, input_category):
             tooltip=["Year:O", "Accident Count:Q", category_numeric],
         )
     )
-
     chart = (line + points).properties(width=850, height=200)
-
     return chart
 
 
-def get_road_chart(df, input_category, count_type = "zero"):
+def get_road_chart(df, input_category, count_type="zero"):
     category_label, category_numeric, category_order = get_category(input_category)
     filtered_values = df[category_label].unique().tolist()
-    dynamic_order = [value for value in category_order if value in filtered_values]
+    dynamic_order = [v for v in category_order if v in filtered_values]
     stacked_type = "normalize" if count_type == "Normalized" else "zero"
-    count_axis_title = f"{count_type} " + CHART_ACCIDENT_COUNT_Y_AXIS_LABEL
+    count_axis_title = f"{count_type} {CHART_ACCIDENT_COUNT_Y_AXIS_LABEL}"
     chart = (
         alt.Chart(df)
         .mark_bar()
@@ -255,16 +246,43 @@ def get_road_chart(df, input_category, count_type = "zero"):
 
 
 def register_callbacks(app, cache):
-    """Registers callbacks and caches dataset."""
-
+    # Cache the raw dataset.
     @cache.memoize()
     def get_cached_data():
-        """Load and cache the dataset."""
         return canadian_data
 
+    # Cache chart generation based solely on filter parameters and the group-by category.
     @cache.memoize()
-    def chart_to_dict(df, group_by_category):
-        """Cached function to generate charts."""
+    def get_charts(
+        urban_rural,
+        season,
+        weather_condition,
+        road_condition,
+        time_of_day,
+        year_range,
+        months,
+        group_by_category,
+    ):
+        # Ensure parameters are hashable
+        urban_rural = tuple(urban_rural or [])
+        season = tuple(season or [])
+        weather_condition = tuple(weather_condition or [])
+        road_condition = tuple(road_condition or [])
+        time_of_day = tuple(time_of_day or [])
+        months = tuple(months or [])
+        year_range = tuple(year_range)
+
+        raw_df = get_cached_data()
+        df = filter_data(
+            raw_df,
+            urban_rural,
+            season,
+            weather_condition,
+            road_condition,
+            time_of_day,
+            year_range,
+            months,
+        )
         return (
             get_emergency_response_time_chart(df, group_by_category).to_dict(
                 format="vega"
@@ -274,13 +292,13 @@ def register_callbacks(app, cache):
             get_line_chart(df, group_by_category).to_dict(format="vega"),
             get_road_chart(df, group_by_category).to_dict(format="vega"),
         )
-    
+
     @callback(
-        Output("age_chart", "spec", allow_duplicate = True),
+        Output("age_chart", "spec", allow_duplicate=True),
         Input("in-memory-store", "data"),
         Input("age_chart_normalize_checkbox", "value"),
         State("group_by_radio", "value"),
-        prevent_initial_call = True
+        prevent_initial_call=True,
     )
     def reload_age_chart(df_raw, checkbox_value, group_by_category):
         df = pd.DataFrame(df_raw)
@@ -288,29 +306,31 @@ def register_callbacks(app, cache):
         return get_age_chart(df, group_by_category, count_type).to_dict(format="vega")
 
     @callback(
-        Output("road_chart", "spec", allow_duplicate = True),
+        Output("road_chart", "spec", allow_duplicate=True),
         Input("in-memory-store", "data"),
         Input("road_chart_normalize_checkbox", "value"),
         State("group_by_radio", "value"),
-        prevent_initial_call = True
+        prevent_initial_call=True,
     )
     def reload_road_chart(df_raw, checkbox_value, group_by_category):
         df = pd.DataFrame(df_raw)
         count_type = "Normalized" if checkbox_value else "Raw"
         return get_road_chart(df, group_by_category, count_type).to_dict(format="vega")
-    
+
     @callback(
-        Output("weather_chart", "spec", allow_duplicate = True),
+        Output("weather_chart", "spec", allow_duplicate=True),
         Input("in-memory-store", "data"),
         Input("weather_chart_normalize_checkbox", "value"),
         State("group_by_radio", "value"),
-        prevent_initial_call = True
+        prevent_initial_call=True,
     )
     def reload_weather_chart(df_raw, checkbox_value, group_by_category):
         df = pd.DataFrame(df_raw)
         count_type = "Normalized" if checkbox_value else "Raw"
-        return get_weather_chart(df, group_by_category, count_type).to_dict(format="vega")
-    
+        return get_weather_chart(df, group_by_category, count_type).to_dict(
+            format="vega"
+        )
+
     @callback(
         Output("emergency_response_time_chart", "spec"),
         Output("weather_chart", "spec"),
@@ -364,7 +384,7 @@ def register_callbacks(app, cache):
             months = []
             group_by_category = GROUP_BY_SEVERITY
 
-        # Convert lists to tuples for cache stability
+        # Convert all filter lists into tuples for caching consistency.
         urban_rural = tuple(urban_rural or [])
         season = tuple(season or [])
         weather_condition = tuple(weather_condition or [])
@@ -373,9 +393,39 @@ def register_callbacks(app, cache):
         months = tuple(months or [])
         year_range = tuple(year_range)
 
-        raw_df = get_cached_data()
+        charts = get_charts(
+            urban_rural,
+            season,
+            weather_condition,
+            road_condition,
+            time_of_day,
+            year_range,
+            months,
+            group_by_category,
+        )
+
+        # Reset in-card checkbox states to False.
+        age_chart_normalize_checkbox_state = False
+        road_chart_normalize_checkbox_state = False
+        weather_chart_normalize_checkbox_state = False
+
+        filters = (
+            urban_rural,
+            season,
+            weather_condition,
+            road_condition,
+            time_of_day,
+            year_range,
+            months,
+            group_by_category,
+            age_chart_normalize_checkbox_state,
+            road_chart_normalize_checkbox_state,
+            weather_chart_normalize_checkbox_state,
+        )
+
+        # Store the filtered data as records.
         df = filter_data(
-            raw_df,
+            get_cached_data(),
             urban_rural,
             season,
             weather_condition,
@@ -384,31 +434,5 @@ def register_callbacks(app, cache):
             year_range,
             months,
         )
-
-        # Fetch cached charts
-        charts = chart_to_dict(df, group_by_category)
-
-        # Always reset the in-card checkboxes to false when this is called to prevent
-        # funky stuff from happening
-        age_chart_normalize_checkbox_state = False
-        road_chart_normalize_checkbox_state = False
-        weather_chart_normalize_checkbox_state = False
-
-        filters = list(
-            (
-                urban_rural,
-                season,
-                weather_condition,
-                road_condition,
-                time_of_day,
-                year_range,
-                months,
-                group_by_category,
-                age_chart_normalize_checkbox_state,
-                road_chart_normalize_checkbox_state,
-                weather_chart_normalize_checkbox_state
-            )
-        )
-
-        df_store = df.to_dict('records')
+        df_store = df.to_dict("records")
         return (*charts, *filters, df_store)

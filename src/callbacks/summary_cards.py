@@ -42,7 +42,6 @@ def compute_pct_change_earliest_latest(df, col=None, agg="sum"):
     if df.empty or "Year" not in df.columns:
         return ("N/A", {})
 
-    # Group by Year only. If no month filter is applied, this includes all months.
     if col is None:
         grouped = df.groupby("Year").size().reset_index(name="Count")
         col = "Count"
@@ -54,8 +53,6 @@ def compute_pct_change_earliest_latest(df, col=None, agg="sum"):
         return ("N/A", {})
 
     grouped = grouped.sort_values("Year")
-    # print(grouped)
-
     if len(grouped) < 2:
         return ("N/A", {})
 
@@ -75,16 +72,16 @@ def compute_pct_change_earliest_latest(df, col=None, agg="sum"):
 def generate_card_body(
     title, desc_value, subtitle=" ", subtitle_style=None, tooltip_desc=None
 ):
+    # Split title into two parts; if there's only one word, s2 remains empty.
     words = title.split(" ", 1)
     s1, s2 = words if len(words) == 2 else (title, "")
-    tooltip_id = (f"{s1}-{s2}-tooltip").lower()  # e.g 'total-accidents-tooltip'
+    tooltip_id = (f"{s1}-{s2}-tooltip").lower()  # e.g., 'total-accidents-tooltip'
     return dbc.Card(
         [
             dbc.CardHeader(
                 html.Div(
                     [
-                        # s1, html.Br(), s2,
-                        html.Span(f"{s1} {s2}"),  # Title text
+                        html.Span(f"{s1} {s2}"),
                         html.Abbr(
                             "\u2753",
                             title=tooltip_desc,
@@ -114,7 +111,7 @@ def generate_card_body(
                     tooltip_desc,
                     target=tooltip_id,
                     placement="top",
-                    delay={"show": 0, "hide": 0}
+                    delay={"show": 0, "hide": 0},
                 )
                 if tooltip_desc
                 else None
@@ -126,7 +123,7 @@ def generate_card_body(
 
 def format_currency(value):
     """
-    Format a number with appropriate currency suffix:
+    Format a number with an appropriate currency suffix.
     """
     if value >= 1_000_000_000:  # Billion
         return f"${value / 1_000_000_000:.1f}B"
@@ -140,29 +137,26 @@ def format_currency(value):
 
 def format_tooltip_description(year_range, months):
     """
-    Format the year range and months filters passed into tooltips
+    Format the year range and months filters for tooltips.
     """
     start_year, end_year = year_range[0], year_range[1]
-    yr_text = f"between year {start_year} and year {end_year}"
-    if start_year == end_year:
-        yr_text = f"in year {start_year}"
-
+    yr_text = (
+        f"between year {start_year} and year {end_year}"
+        if start_year != end_year
+        else f"in year {start_year}"
+    )
     m_text = ""
-    if len(months) > 1:
+    if months and len(months) > 1:
         m_text = "for months [" + ", ".join(months) + "], "
-    elif len(months) == 1:
+    elif months and len(months) == 1:
         m_text = f"for month {months[0]}, "
-
-    desc = m_text + yr_text
-    return desc
+    return m_text + yr_text
 
 
 def register_callbacks(app, cache):
-    """Registers callbacks and caches dataset."""
-
     @cache.memoize()
     def get_cached_data():
-        """Load and cache the dataset."""
+        """Load and cache the raw dataset."""
         return canadian_data
 
     @cache.memoize()
@@ -175,20 +169,20 @@ def register_callbacks(app, cache):
         year_range,
         months,
     ):
-        """Cached function to compute summary statistics."""
-        raw_df = get_cached_data()
-
-        # Convert mutable lists to tuples for cache stability
+        """
+        Compute summary statistics based on filtered data.
+        Convert mutable inputs into tuples for caching consistency.
+        """
         urban_rural = tuple(urban_rural or [])
         season = tuple(season or [])
         weather_condition = tuple(weather_condition or [])
         road_condition = tuple(road_condition or [])
         time_of_day = tuple(time_of_day or [])
-        year_range = tuple(year_range)
         months = tuple(months or [])
+        year_range = tuple(year_range)
 
         df = filter_data(
-            raw_df,
+            get_cached_data(),
             urban_rural,
             season,
             weather_condition,
@@ -225,13 +219,12 @@ def register_callbacks(app, cache):
             leading_cause = "N/A"
         else:
             top_cause = cause_counts.index[0]
-            # If it's a single word, add a line break
+            # If it's a single word, insert line breaks.
             if len(top_cause.split()) == 1:
                 leading_cause = html.Span([top_cause, html.Br(), html.Br()])
             else:
                 leading_cause = top_cause
 
-        # dynamically compute tooltip description based on current filters
         acc_tooltip_desc = (
             "Total Accidents and percentage changes, "
             + format_tooltip_description(year_range, months)
@@ -297,8 +290,8 @@ def register_callbacks(app, cache):
         months,
     ):
         triggered = ctx.triggered_id
-        # If the Reset button is clicked, revert filters to their default.
-        min_year, max_year = canadian_data.Year.min(), canadian_data.Year.max()
+        # If the Reset button is clicked, revert filters to their default values.
+        min_year, max_year = get_cached_data().Year.min(), get_cached_data().Year.max()
         if triggered == "reset-filter":
             urban_rural = []
             season = []
@@ -307,7 +300,6 @@ def register_callbacks(app, cache):
             time_of_day = []
             year_range = [min_year, max_year]
             months = []
-
         stats = compute_summary_stats(
             urban_rural,
             season,
@@ -317,7 +309,6 @@ def register_callbacks(app, cache):
             year_range,
             months,
         )
-
         return (
             generate_card_body(
                 "Total Accidents",
