@@ -23,15 +23,26 @@ from callbacks.charts import (
 
 # App init
 data = canadian_data
-app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], prevent_initial_callbacks = True)
+app = Dash(
+    __name__,
+    external_stylesheets=[dbc.themes.BOOTSTRAP],
+    prevent_initial_callbacks=True,
+)
 app.title = APP_MASTER_TITLE
 server = app.server
-cache = Cache(server, config={"CACHE_TYPE": "filesystem", "CACHE_DIR": "tmp"})
+cache = Cache(
+    server,
+    config={
+        "CACHE_TYPE": "filesystem",
+        "CACHE_DIR": "tmp",
+        "CACHE_DEFAULT_TIMEOUT": 300,
+    },
+)
 
 # App layout
 app.layout = dbc.Container(
     [
-        dcc.Store(id='in-memory-store', data=None),
+        dcc.Store(id="in-memory-store", data=None),
         dbc.Row([navbar, about_text]),
         html.Br(),
         dbc.Row(
