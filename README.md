@@ -19,8 +19,8 @@ Navigate through the dashboard using the following interactive features:
 - **Group By Options** – Aggregate data based on:
   - Accident Severity
   - Time of Accident
-  - Settlement Type (Urban, Rural, etc.)
-  - Season (Winter, Spring, Summer, Fall)
+  - Settlement Type (Urban, Rural)
+  - Season (Winter, Spring, Summer, Autumn)
 
 - **Filter Options** – Select one or more:
   - Settlement Type
